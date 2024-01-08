@@ -12,9 +12,8 @@ const getTokenFrom = request => {
 }
 
 tasksRouter.get('/', async (request, response) => {
-    const tasks = await Task
-        .find({}).populate('user', { username: 1, name: 1 })
-    response.json(tasks)
+  const tasks = await Task.find({}).populate('user', { username: 1, name: 1 })
+  response.json(tasks)
 })
 
 tasksRouter.post('/', async (request, response) => {

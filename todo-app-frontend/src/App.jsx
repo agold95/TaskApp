@@ -5,6 +5,7 @@ import { Routes, Route, Link, Navigate, useMatch } from "react-router-dom"
 import LoginForm from "./components/LoginForm"
 import Tasks from "./components/Tasks"
 import NewUserForm from "./components/NewUserForm"
+import Navbar from "./components/Navbar"
 
 // services
 import taskService from './services/tasks'
@@ -17,6 +18,7 @@ function App() {
   const [name, setName] = useState('')
   const [user, setUser] = useState(null)
   const [tasks, setTasks] = useState([])
+  const [loginVisible, setLoginVisible] = useState(false)
 
   // initializes all tasks
   useEffect(() => {
@@ -29,7 +31,8 @@ function App() {
 
   // sets users json web token
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
+    // sets local storage to remember user
+    const loggedUserJSON = window.localStorage.getItem('loggedTaskappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
@@ -38,7 +41,6 @@ function App() {
   }, [])
 
   // login handling
-
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
@@ -57,23 +59,7 @@ function App() {
     }
   }
 
-  // login form
-  const loginForm = () => {
-    return (
-      <div>
-        <LoginForm
-          username={username}
-          password={password}
-          handleUsernameChange={({ target }) => setUsername(target.value)}
-          handlePasswordChange={({ target }) => setPassword(target.value)}
-          handleSubmit={handleLogin}
-        />
-      </div>
-    )
-  }
-
   // new user handling
-  
   const handleNewUser = async (event) => {
     event.preventDefault()
     try {
@@ -93,50 +79,67 @@ function App() {
     }
   }
 
-  // new user form
-  const newUserForm = () => {
-    return (
-      <div>
-        <NewUserForm
-          username={username}
-          password={password}
-          name={name}
-          handleUsernameChange={({ target }) => setUsername(target.value)}
-          handlePasswordChange={({ target }) => setPassword(target.value)}
-          handleNameChange={({ target }) => setName(target.value)}
-          handleSubmit={handleNewUser}
-        />
-      </div>
-    )
-  }
-
   // logout handling
   const handleLogout = () => {
     window.localStorage.clear()
     setUser(null)
   }
 
-  // if not signed in, return the login/new user form
+  // add task handling
+  const addTask = async (taskObject) => {
+    await taskService.create(taskObject).then((returnedTask) => {
+      setTasks(tasks.concat(returnedTask))
+    })
+  }
+
+  // remove task handling
+  const removeTask = async (task) => {
+    await taskService.remove(task.id)
+
+    let tasks = await taskService.getAll()
+    setTasks(tasks)
+  }
+
+  // if not signed in, return the login/new user forms
   if (user === null) {
+    const hideWhenVisible = { display: loginVisible ? 'none' : '' }
+    const showWhenVisible = { display: loginVisible ? '' : 'none' }
+
     return (
       <div>
-        <h1>Welcome to Note App!</h1>
-        {loginForm()}
-        <br />
-        { newUserForm() }
+        <h1>Welcome to Task App!</h1>
+        <div style={hideWhenVisible}>
+          <LoginForm
+            username={username}
+            password={password}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleSubmit={handleLogin}
+          />
+          <button onClick={() => setLoginVisible(true)}>Create a new account</button>
+        </div>
+        <div style={showWhenVisible}>
+          <NewUserForm
+            username={username}
+            password={password}
+            name={name}
+            handleUsernameChange={({ target }) => setUsername(target.value)}
+            handlePasswordChange={({ target }) => setPassword(target.value)}
+            handleNameChange={({ target }) => setName(target.value)}
+            handleSubmit={handleNewUser}
+          />
+          <button onClick={() => setLoginVisible(false)}>Log in to an existing account</button>
+        </div>
       </div>
     )
   }
 
   return (
     <div>
-      <h1>Tasks</h1>
-      {user && <div>
-        <p>{user.name} logged in</p>
-        <button onClick={handleLogout}>logout</button>
-        </div>
-        }
-      <Tasks tasks={tasks} />
+      <Navbar user={user} username={username} handleLogout={handleLogout} />
+      <div>
+        <Tasks tasks={tasks} addTask={addTask} removeTask={removeTask} />
+      </div>
     </div>
   )
 }

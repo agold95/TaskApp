@@ -15,6 +15,14 @@ const NewUserForm = ({
 
       <form onSubmit={handleSubmit}>
         <div>
+          name
+          <input
+            id='new-user-name'
+            value={name}
+            onChange={handleNameChange}
+          />
+        </div>
+        <div>
           username
           <input
             id='new-user-username'
@@ -29,14 +37,6 @@ const NewUserForm = ({
             type="password"
             value={password}
             onChange={handlePasswordChange}
-          />
-        </div>
-        <div>
-          name
-          <input
-            id='new-user-name'
-            value={name}
-            onChange={handleNameChange}
           />
         </div>
         <button id='new-user-button' type="submit">create</button>
