@@ -22,12 +22,15 @@ function App() {
 
   // initializes all tasks
   useEffect(() => {
-    taskService
-      .getAll()
-      .then(initialTasks => {
-        setTasks(initialTasks)
-      })
-  }, [])
+    if (user) {
+      taskService
+        .getAll()
+        .then(initialTasks => {
+          const userTasks = initialTasks.filter(task => task.user.username === user.username)
+          setTasks(userTasks)
+        })
+      }
+  }, [user])
 
   // sets users json web token
   useEffect(() => {
@@ -97,7 +100,8 @@ function App() {
     await taskService.remove(task.id)
 
     let tasks = await taskService.getAll()
-    setTasks(tasks)
+    const userTasks = tasks.filter(task => task.user.username === user.username)
+    setTasks(userTasks)
   }
 
   // if not signed in, return the login/new user forms

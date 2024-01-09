@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt')
 const usersRouter = require('express').Router()
 const User = require('../models/user')
 
+// create new user
 usersRouter.post('/', async (request, response) => {
   const { username, name, password } = request.body
 
@@ -19,6 +20,7 @@ usersRouter.post('/', async (request, response) => {
   response.status(201).json(savedUser)
 })
 
+// get all users
 usersRouter.get('/', async (request, response) => {
    const users = await User
     .find({}).populate('tasks', { content: 1, deadline: 1 })

@@ -1,20 +1,20 @@
-const config = require('./utils/config')
-const express = require('express')
 require('express-async-errors')
-const app = express()
+const express = require('express')
 const cors = require('cors')
-const logger = require('./utils/logger')
-const mongoose = require('mongoose')
+const app = express()
 
 const loginRouter = require('./controllers/login')
 const usersRouter = require('./controllers/users')
 const tasksRouter = require('./controllers/tasks')
+
+const config = require('./utils/config')
 const middleware = require('./utils/middleware')
+const logger = require('./utils/logger')
+
+const mongoose = require('mongoose')
 
 mongoose.set('strictQuery', false)
-
 logger.info('connecting to', config.MONGODB_URI)
-
 mongoose.connect(config.MONGODB_URI)
   .then(() => {
     logger.info('connected to MongoDB')
@@ -27,11 +27,14 @@ app.use(cors())
 app.use(express.static('dist'))
 app.use(express.json())
 app.use(middleware.requestLogger)
+app.use(middleware.tokenExtractor)
 
-app.use('/api/login', loginRouter)
-app.use('/api/tasks', tasksRouter)
+// main routes
+app.use('/api/login', middleware.userExtractor, loginRouter)
+app.use('/api/tasks', middleware.userExtractor, tasksRouter)
 app.use('/api/users', usersRouter)
 
+// resting route
 if (process.env.NODE_ENV === 'test') {
   const testingRouter = require('./controllers/testing')
   app.use('/api/testing', testingRouter)

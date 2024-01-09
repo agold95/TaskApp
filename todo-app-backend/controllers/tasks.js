@@ -1,43 +1,13 @@
 const tasksRouter = require('express').Router()
 const Task = require('../models/task')
-const User = require('../models/user')
-const jwt = require('jsonwebtoken')
 
-const getTokenFrom = request => {
-  const authorization = request.get('authorization')
-  if (authorization && authorization.startsWith('Bearer ')) {
-    return authorization.replace('Bearer ', '')
-  }
-  return null
-}
-
+// get all tasks
 tasksRouter.get('/', async (request, response) => {
   const tasks = await Task.find({}).populate('user', { username: 1, name: 1 })
   response.json(tasks)
 })
 
-tasksRouter.post('/', async (request, response) => {
-  const body = request.body
-
-  const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'token invalid' })
-  }
-  const user = await User.findById(decodedToken.id)
-
-  const task = new Task({
-    content: body.content,
-    deadline: body.deadline === undefined ? false : body.deadline,
-    user: user.id
-  })
-
-  const savedTask = await task.save()
-  user.tasks = user.tasks.concat(savedTask._id)
-  await user.save()
-
-  response.status(201).json(savedTask)
-})
-
+// get individual task
 tasksRouter.get('/:id', async (request, response) => {
   const task = await Task.findById(request.params.id)
   if (task) {
@@ -47,11 +17,32 @@ tasksRouter.get('/:id', async (request, response) => {
   }
 })
 
-tasksRouter.delete('/:id', async (request, response) => {
-  await Task.findByIdAndRemove(request.params.id)
-  response.status(204).end()
+// create new task
+tasksRouter.post('/', async (request, response) => {
+  const { content, deadline } = request.body
+  const task = new Task({
+    content, deadline
+  })
+
+  const user = request.user
+
+  if (!user) {
+    return response.status(401).json({ error: 'operation not permitted' })
+  }
+
+  task.user = user._id
+
+  let createdTask = await task.save()
+
+  user.tasks = user.tasks.concat(createdTask._id)
+  await user.save()
+
+  createdTask = await Task.findById(createdTask._id).populate('user')
+
+  response.status(201).json(createdTask)
 })
 
+// edit task
 tasksRouter.put('/:id', async (request, response, next) => {
   const body = request.body
 
@@ -65,6 +56,12 @@ tasksRouter.put('/:id', async (request, response, next) => {
       response.json(updatedTask)
     })
     .catch(error => next(error))
+})
+
+// delete task
+tasksRouter.delete('/:id', async (request, response) => {
+  await Task.findByIdAndRemove(request.params.id)
+  response.status(204).end()
 })
 
 module.exports = tasksRouter
