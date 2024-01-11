@@ -3,7 +3,7 @@ const Task = require('../models/task')
 
 // get all tasks
 tasksRouter.get('/', async (request, response) => {
-  const tasks = await Task.find({}).populate('user', { username: 1, name: 1 })
+  const tasks = await Task.find({}).populate('user', { username: 1 })
   response.json(tasks)
 })
 

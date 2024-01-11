@@ -1,6 +1,9 @@
-const Logout = ({ username, handleLogout }) => {
+// bootstrap components
+import { Button } from "react-bootstrap"
+
+const Logout = ({ handleLogout }) => {
     return (
-        <button onClick={handleLogout}>logout</button>
+        <Button variant="outline-secondary" size="sm" onClick={handleLogout}>logout</Button>
     )
 }
 
