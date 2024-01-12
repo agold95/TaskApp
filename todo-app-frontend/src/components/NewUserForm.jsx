@@ -7,8 +7,10 @@ const NewUserForm = ({
   handleSubmit,
   handleUsernameChange,
   handlePasswordChange,
+  handlePasswordConfirmationChange,
   username,
-  password
+  password,
+  passwordConfirmation
 }) => {
   return (
     <Container className='d-flex flex-column align-items-center'>
@@ -35,6 +37,17 @@ const NewUserForm = ({
             onChange={handlePasswordChange}
           />
         </Form.Group>
+          <Form.Group>
+          <Form.Text>Confirm Password</Form.Text>
+          <Form.Control
+            id='new-user-password-confirmation'
+            type="password"
+            value={passwordConfirmation}
+            required
+            placeholder='Enter password confirmation'
+            onChange={handlePasswordConfirmationChange}
+          />
+        </Form.Group>
         <div className='p-2 d-flex justify-content-end'>
           <Button id='new-user-button' type="submit">Create account</Button>
         </div>
@@ -47,8 +60,10 @@ NewUserForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   handleUsernameChange: PropTypes.func.isRequired,
   handlePasswordChange: PropTypes.func.isRequired,
+  handlePasswordConfirmationChange: PropTypes.func.isRequired,
   username: PropTypes.string.isRequired,
-  password: PropTypes.string.isRequired
+  password: PropTypes.string.isRequired,
+  passwordConfirmation: PropTypes.string.isRequired
 }
 
 export default NewUserForm

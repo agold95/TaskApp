@@ -27,7 +27,7 @@ tasksRouter.post('/', async (request, response) => {
   const user = request.user
 
   if (!user) {
-    return response.status(401).json({ error: 'operation not permitted' })
+    return response.status(401).json({ error: 'Operation not permitted' })
   }
 
   task.user = user._id
@@ -40,22 +40,6 @@ tasksRouter.post('/', async (request, response) => {
   createdTask = await Task.findById(createdTask._id).populate('user')
 
   response.status(201).json(createdTask)
-})
-
-// edit task
-tasksRouter.put('/:id', async (request, response, next) => {
-  const body = request.body
-
-  const task = {
-    content: body.content,
-    deadline: body.deadline,
-  }
-
-  await Task.findByIdAndUpdate(request.params.id, task, { new: true })
-    .then(updatedTask => {
-      response.json(updatedTask)
-    })
-    .catch(error => next(error))
 })
 
 // delete task

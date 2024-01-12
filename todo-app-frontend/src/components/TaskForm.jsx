@@ -1,7 +1,7 @@
 import { useState } from "react"
 
 //bootstrap components
-import { Button, Container, Form, FormGroup } from "react-bootstrap"
+import { Button, Container, Form } from "react-bootstrap"
 
 const TaskForm = ({ createTask }) => {
   const [content, setContent] = useState('')

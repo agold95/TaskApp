@@ -18,6 +18,7 @@ import { Button } from "react-bootstrap"
 function App() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [passwordConfirmation, setPasswordConfirmation] = useState('')
   const [user, setUser] = useState(null)
   const [tasks, setTasks] = useState([])
   const [loginVisible, setLoginVisible] = useState(false)
@@ -62,7 +63,7 @@ function App() {
       setPassword('')
     } catch (error) {
       console.log(error)
-      setNotification('incorrect username or password')
+      setNotification(`${error.response.data.error}`)
       setUsername('')
       setPassword('')
       setTimeout(() => {
@@ -76,11 +77,12 @@ function App() {
     event.preventDefault()
     try {
       const newUser = await usersService.newUser({
-        username, password
+        username, password, passwordConfirmation
       })
       taskService.setToken(newUser.token)
       setUsername('')
       setPassword('')
+      setPasswordConfirmation('')
       setLoginVisible(false)
       setNotification(`New user ${newUser.username} created!`)
       setTimeout(() => {
@@ -90,7 +92,8 @@ function App() {
       console.log(error)
       setUsername('')
       setPassword('')
-      setNotification(`${error.message}`)
+      setPasswordConfirmation('')
+      setNotification(`${error.response.data.error}`)
       setTimeout(() => {
         setNotification(null)
       }, 5000)
@@ -127,6 +130,20 @@ function App() {
       }, 5000)
   }
 
+  // clears fields on form switch
+  const formSwitch = () => {
+    if (loginVisible) {
+      setLoginVisible(false)
+      setUsername('')
+      setPassword('')
+    } else {
+      setLoginVisible(true)
+      setUsername('')
+      setPassword('')
+      setPasswordConfirmation('')
+    }
+  }
+
   // if not signed in, return the login/new user forms
   if (user === null) {
     const hideWhenVisible = { display: loginVisible ? 'none' : '' }
@@ -149,19 +166,21 @@ function App() {
               handleSubmit={handleLogin}
             />
             <div className="p-5">
-              <Button variant="success" size="sm" onClick={() => setLoginVisible(true)}>Create a new account</Button>
+              <Button variant="success" size="sm" onClick={() => formSwitch()}>Create a new account</Button>
             </div>
           </div>
           <div style={showWhenVisible}>
             <NewUserForm
               username={username}
               password={password}
+              passwordConfirmation={passwordConfirmation}
               handleUsernameChange={({ target }) => setUsername(target.value)}
               handlePasswordChange={({ target }) => setPassword(target.value)}
+              handlePasswordConfirmationChange={({ target }) => setPasswordConfirmation(target.value)}
               handleSubmit={handleNewUser}
             />
             <div className="p-5">
-              <Button variant="warning" size="sm" onClick={() => setLoginVisible(false)}>Log in to an existing account</Button>
+              <Button variant="info" size="sm" onClick={() => formSwitch()}>Log in to an existing account</Button>
             </div>
           </div>
         </div>
