@@ -193,7 +193,7 @@ function App() {
       <NavbarComponent user={user} username={username} handleLogout={handleLogout} />
       <div>
         <Notification notification={notification} />
-        <Tasks tasks={tasks} addTask={addTask} removeTask={removeTask} />
+        <Tasks tasks={tasks} setTasks={setTasks} addTask={addTask} removeTask={removeTask} />
       </div>
     </div>
   )

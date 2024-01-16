@@ -29,6 +29,7 @@ const TaskForm = ({ createTask }) => {
             id="content"
             type="text"
             value={content}
+            placeholder='Enter task'
             required
             onChange={({ target }) => setContent(target.value)}
           />

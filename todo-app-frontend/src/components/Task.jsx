@@ -7,9 +7,9 @@ const Task = ({ task, removeTask }) => {
             <div>
                 <h3>{task.content}</h3>
                 {task.deadline == null
-                    ? <p>Due on: <i>none specified</i></p>
-                    : <p>Due on: <i>{new Date(task.deadline).toLocaleDateString()} by {new Date(task.deadline).toLocaleTimeString()}</i></p>}
-                <small>Created on: {new Date(task.updatedAt).toLocaleDateString()} at {new Date(task.updatedAt).toLocaleTimeString()}</small>
+                    ? <p>Due on: none specified</p>
+                    : <p>Due on: {new Date(task.deadline).toLocaleDateString()} by {new Date(task.deadline).toLocaleTimeString()}</p>}
+                <small><i>Added on: {new Date(task.updatedAt).toLocaleDateString()} at {new Date(task.updatedAt).toLocaleTimeString()}</i></small>
             </div>
             <div>
                 <Button variant="outline-danger" onClick={() => removeTask(task)}>Finish Task</Button>
