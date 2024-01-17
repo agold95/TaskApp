@@ -72,6 +72,12 @@ function App() {
     }
   }
 
+  // logout handling
+  const handleLogout = () => {
+    window.localStorage.clear()
+    setUser(null)
+  }
+
   // new user handling
   const handleNewUser = async (event) => {
     event.preventDefault()
@@ -100,34 +106,54 @@ function App() {
     }
   }
 
-  // logout handling
-  const handleLogout = () => {
-    window.localStorage.clear()
-    setUser(null)
-  }
-
   // add task handling
-  const addTask = (taskObject) => {
-   taskService.create(taskObject).then((returnedTask) => {
-     setTasks(tasks.concat(returnedTask))
-     setNotification('Task added!')
+  const addTask = async (newTask) => {
+    try {
+      const createdTask = await taskService.create(newTask)
+      setTasks(tasks.concat(createdTask))
+      setNotification('Task added!')
+          setTimeout(() => {
+            setNotification(null)
+          }, 5000)
+    } catch (error) {
+      setNotification(`${error.response.data.error}`)
       setTimeout(() => {
         setNotification(null)
       }, 5000)
-    })
+    }
+  }
+
+  // update task handling
+  const updateTask = async (task) => {
+    try {
+      await taskService.update(task.id, {
+        
+      })
+    } catch (error) {
+      setNotification(`${error.response.data.error}`)
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
+    }
   }
 
   // remove task handling
   const removeTask = async (task) => {
-    await taskService.remove(task.id)
-
-    let tasks = await taskService.getAll()
-    const userTasks = tasks.filter(task => task.user.username === user.username)
-    setTasks(userTasks)
-    setNotification('Task removed!')
+    try {
+      await taskService.remove(task.id)
+      let tasks = await taskService.getAll()
+      const userTasks = tasks.filter(task => task.user.username === user.username)
+      setTasks(userTasks)
+      setNotification('Task removed!')
+        setTimeout(() => {
+          setNotification(null)
+        }, 5000)
+    } catch (error) {
+      setNotification(`${error.response.data.error}`)
       setTimeout(() => {
         setNotification(null)
       }, 5000)
+    }
   }
 
   // clears fields on form switch
@@ -190,9 +216,9 @@ function App() {
 
   return (
     <div>
-      <NavbarComponent user={user} username={username} handleLogout={handleLogout} />
-      <div>
-        <Notification notification={notification} />
+      <NavbarComponent user={user} handleLogout={handleLogout} />
+      <Notification notification={notification} />
+      <div className="d-flex justify-content-center">
         <Tasks tasks={tasks} setTasks={setTasks} addTask={addTask} removeTask={removeTask} />
       </div>
     </div>

@@ -56,17 +56,19 @@ const Tasks = ({ tasks, setTasks, addTask, removeTask }) => {
     return (
         <Container className="m-2 p-2">
             <h1>Tasks</h1>
-            <Container className="d-flex flex-column align-items-end m-4">
+            <Container className="d-flex flex-column align-items-end">
                 <Container>
-                    <div className="d-flex justify-content-center p-3">
                         <div style={showWhenVisible}>
-                            <Button variant="secondary" onClick={() => setTaskFormVisible(false)}>Hide new task form</Button> 
+                            <div className="d-flex justify-content-center">
+                                <Button variant="secondary" onClick={() => setTaskFormVisible(false)}>Hide new task form</Button> 
+                            </div>
                             <TaskForm createTask={addTask} />
                         </div>
                         <div style={hideWhenVisible}>
-                            <Button onClick={() => setTaskFormVisible(true)}>Add a new task</Button>
+                            <div className="d-flex justify-content-center">
+                                <Button onClick={() => setTaskFormVisible(true)}>Add a new task</Button>
+                            </div>
                         </div>
-                    </div>
                     <Container className="d-flex justify-content-end align-items-center">
                         <DropdownButton size="sm" variant="link" title="Sort" drop="end">
                             <Dropdown.Header>Date added:</Dropdown.Header>

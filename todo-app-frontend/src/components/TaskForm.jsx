@@ -20,9 +20,9 @@ const TaskForm = ({ createTask }) => {
   }
 
   return (
-    <Container className="p-2">
-      <h2>Add new task</h2>
-      <Form onSubmit={addTask}>
+    <Container className="py-3 my-3">
+      <h2 className="text-center">Add new task</h2>
+      <Form className="p-3 border border-secondary rounded" onSubmit={addTask}>
         <Form.Group>
           <Form.Text>Task</Form.Text>
           <Form.Control
@@ -43,7 +43,7 @@ const TaskForm = ({ createTask }) => {
             onChange={({ target }) => setDeadline(target.value)}
           />
         </Form.Group>
-        <div className='p-2 d-flex justify-content-end'>
+        <div className='pt-3 d-flex justify-content-evenly'>
           <Button className="mx-4" size="sm" variant="danger" type="reset" onClick={() => reset()}>Reset</Button>
           <Button variant="success" type="submit">Add Task</Button>
         </div>

@@ -1,19 +1,17 @@
-import Logout from "./Logout"
-
 // bootstrap components
-import { Container, Navbar } from "react-bootstrap"
+import { Container, Navbar, Button } from "react-bootstrap"
 
-const NavbarComponent = ({ user, username, handleLogout }) => {
+const NavbarComponent = ({ user, handleLogout }) => {
     return (
-      <Navbar className="bg-body-tertiary">
+      <Navbar className="bg-body-secondary">
         <Container></Container>
-        <Container className="justify-content-center">
-          <Navbar.Brand>Task App</Navbar.Brand>
+        <Container className="justify-content-center align-items-center align-self-center">
+          <Navbar.Brand className="m-0 p-0">Task App</Navbar.Brand>
         </Container>
         <Container className="pl-0">
           <Navbar.Text></Navbar.Text>
           <Navbar.Text>{user.username} logged in</Navbar.Text>
-          <Logout username={username} handleLogout={handleLogout} />
+          <Button variant="outline-secondary" size="sm" onClick={handleLogout}>logout</Button>
         </Container>
       </Navbar>
     )
