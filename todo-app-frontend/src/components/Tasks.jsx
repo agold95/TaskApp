@@ -6,7 +6,7 @@ import TaskForm from "./TaskForm"
 // bootstrap components
 import { Button, Container, Dropdown, DropdownButton } from "react-bootstrap"
 
-const Tasks = ({ tasks, setTasks, addTask, removeTask }) => {
+const Tasks = ({ tasks, setTasks, addTask, updateTask, removeTask }) => {
     const [taskFormVisible, setTaskFormVisible] = useState(false)
     const [filterName, setFilterName] = useState('')
 
@@ -90,6 +90,7 @@ const Tasks = ({ tasks, setTasks, addTask, removeTask }) => {
                         <Task
                         key={task.id}
                         task={task}
+                        updateTask={updateTask}
                         removeTask={removeTask}
                         />
                     )}

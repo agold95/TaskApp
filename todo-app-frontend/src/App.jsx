@@ -31,7 +31,10 @@ function App() {
         .getAll()
         .then(initialTasks => {
           const userTasks = initialTasks.filter(task => task.user.username === user.username)
-          setTasks(userTasks)
+          const sorted = [...userTasks].sort((a, b) => {
+            return new Date(a.createdAt) - new Date(b.createdAt)
+        })
+        setTasks(sorted)
         })
       }
   }, [user])
@@ -124,12 +127,23 @@ function App() {
   }
 
   // update task handling
-  const updateTask = async (task) => {
+  const updateTask = async (id, task) => {
     try {
-      await taskService.update(task.id, {
-        
-      })
+      const taskToUpdate = { ...task, content: task.content, deadline: task.deadline }
+      await taskService.update(id, taskToUpdate)
+      
+      let tasks = await taskService.getAll()
+      const userTasks = tasks.filter(task => task.user.username === user.username)
+      const sorted = [...userTasks].sort((a, b) => {
+            return new Date(a.createdAt) - new Date(b.createdAt)
+        })
+      setTasks(sorted)
+      setNotification('Task updated!')
+        setTimeout(() => {
+          setNotification(null)
+        }, 5000)
     } catch (error) {
+      console.log(error)
       setNotification(`${error.response.data.error}`)
       setTimeout(() => {
         setNotification(null)
@@ -143,7 +157,10 @@ function App() {
       await taskService.remove(task.id)
       let tasks = await taskService.getAll()
       const userTasks = tasks.filter(task => task.user.username === user.username)
-      setTasks(userTasks)
+      const sorted = [...userTasks].sort((a, b) => {
+            return new Date(a.createdAt) - new Date(b.createdAt)
+        })
+      setTasks(sorted)
       setNotification('Task removed!')
         setTimeout(() => {
           setNotification(null)
@@ -219,7 +236,7 @@ function App() {
       <NavbarComponent user={user} handleLogout={handleLogout} />
       <Notification notification={notification} />
       <div className="d-flex justify-content-center">
-        <Tasks tasks={tasks} setTasks={setTasks} addTask={addTask} removeTask={removeTask} />
+        <Tasks tasks={tasks} setTasks={setTasks} addTask={addTask} updateTask={updateTask} removeTask={removeTask} />
       </div>
     </div>
   )

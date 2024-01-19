@@ -44,9 +44,15 @@ tasksRouter.post('/', async (request, response) => {
 
 // update task
 tasksRouter.put('/:id', async (request, response) => {
-  const { content, deadline } = request.body
+  const body = request.body
+  const id = request.params.id
 
-  const updatedTask = await Task.findByIdAndUpdate(request.params.id, { content, deadline }, { new: true })
+  const task = {
+    content: body.content,
+    deadline: body.deadline
+  }
+
+  const updatedTask = await Task.findByIdAndUpdate(id, task, { new: true })
   response.status(201).json(updatedTask)
 })
 
