@@ -4,17 +4,24 @@ import { useState } from "react"
 import { Container, Form, Button } from "react-bootstrap"
 
 const EditTaskForm = ({ updateTask, task, setTaskFormVisible }) => {
-    const [editContent, setEditContent] = useState('')
-    const [editDeadline, setEditDeadline] = useState('')
+    const [updatedTaskInfo, setUpdatedTaskInfo] = useState({
+        content: task.content,
+        deadline: task.deadline
+    })
+
+    let d = new Date()
+    const dateTimeLocalValue = () => (new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString()).slice(0, -5)
+
+    const handleChange = e => {
+        setUpdatedTaskInfo({ ...updatedTaskInfo, [e.target.name]: e.target.value })
+    }
 
     const editTask = event => {
         event.preventDefault()
         updateTask(task.id, {
-            content: editContent,
-            deadline: editDeadline
+            ...updatedTaskInfo
         })
-        setEditContent('')
-        setEditDeadline('')
+        
         setTaskFormVisible(false)
     }
 
@@ -27,10 +34,11 @@ const EditTaskForm = ({ updateTask, task, setTaskFormVisible }) => {
             <Form.Control
                 id="content"
                 type="text"
-                value={editContent}
+                name="content"
+                value={updatedTaskInfo.content}
                 placeholder='Enter task'
                 required
-                onChange={({ target }) => setEditContent(target.value)}
+                onChange={handleChange}
             />
             </Form.Group>
             <Form.Group>
@@ -38,8 +46,9 @@ const EditTaskForm = ({ updateTask, task, setTaskFormVisible }) => {
             <Form.Control
                 id="deadline"
                 type="datetime-local"
-                value={editDeadline}
-                onChange={({ target }) => setEditDeadline(target.value)}
+                name="deadline"
+                value={dateTimeLocalValue(updatedTaskInfo.deadline)}
+                onChange={handleChange}
             />
             </Form.Group>
             <div className='pt-3 d-flex justify-content-evenly'>
