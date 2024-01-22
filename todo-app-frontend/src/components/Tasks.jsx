@@ -9,6 +9,7 @@ import { Button, Container, Dropdown, DropdownButton } from "react-bootstrap"
 const Tasks = ({ tasks, setTasks, addTask, updateTask, removeTask }) => {
     const [taskFormVisible, setTaskFormVisible] = useState(false)
     const [filterName, setFilterName] = useState('')
+    const [pastDueTasks, setPastDueTasks] = useState(0)
 
     const hideWhenVisible = { display: taskFormVisible ? 'none' : '' }
     const showWhenVisible = { display: taskFormVisible ? '' : 'none' }
@@ -69,6 +70,11 @@ const Tasks = ({ tasks, setTasks, addTask, updateTask, removeTask }) => {
                                 <Button onClick={() => setTaskFormVisible(true)}>Add a new task</Button>
                             </div>
                         </div>
+                        <div className="m-3 p-3 text-center">
+                        {pastDueTasks > -1
+                            ? <h3 className="text-danger">You have {pastDueTasks} tasks that are past due!</h3>
+                            : null}
+                        </div>
                     <Container className="d-flex justify-content-end align-items-center">
                         <DropdownButton size="sm" variant="link" title="Sort" drop="end">
                             <Dropdown.Header>Date added:</Dropdown.Header>
@@ -92,6 +98,8 @@ const Tasks = ({ tasks, setTasks, addTask, updateTask, removeTask }) => {
                         task={task}
                         updateTask={updateTask}
                         removeTask={removeTask}
+                        pastDueTasks={pastDueTasks}
+                        setPastDueTasks={setPastDueTasks}
                         />
                     )}
                 </Container>
