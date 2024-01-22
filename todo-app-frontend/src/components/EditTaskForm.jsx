@@ -3,7 +3,7 @@ import { useState } from "react"
 // bootstrap components
 import { Container, Form, Button } from "react-bootstrap"
 
-const EditTaskForm = ({ updateTask, task }) => {
+const EditTaskForm = ({ updateTask, task, setTaskFormVisible }) => {
     const [editContent, setEditContent] = useState('')
     const [editDeadline, setEditDeadline] = useState('')
 
@@ -15,6 +15,7 @@ const EditTaskForm = ({ updateTask, task }) => {
         })
         setEditContent('')
         setEditDeadline('')
+        setTaskFormVisible(false)
     }
 
     return (

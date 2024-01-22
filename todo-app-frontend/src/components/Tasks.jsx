@@ -62,7 +62,7 @@ const Tasks = ({ tasks, setTasks, addTask, updateTask, removeTask }) => {
                             <div className="d-flex justify-content-center">
                                 <Button variant="secondary" onClick={() => setTaskFormVisible(false)}>Hide new task form</Button> 
                             </div>
-                            <TaskForm createTask={addTask} />
+                            <TaskForm setTaskFormVisible={setTaskFormVisible} createTask={addTask} />
                         </div>
                         <div style={hideWhenVisible}>
                             <div className="d-flex justify-content-center">

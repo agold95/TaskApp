@@ -32,7 +32,7 @@ const Task = ({ task, updateTask, removeTask }) => {
                 </div>
             </div>
             <div style={showWhenVisible}>
-                <EditTaskForm task={task} updateTask={updateTask} />
+                <EditTaskForm task={task} updateTask={updateTask} setTaskFormVisible={setTaskFormVisible} />
             </div>
         </Container>
     )

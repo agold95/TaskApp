@@ -3,7 +3,7 @@ import { useState } from "react"
 //bootstrap components
 import { Button, Container, Form } from "react-bootstrap"
 
-const TaskForm = ({ createTask }) => {
+const TaskForm = ({ createTask, setTaskFormVisible }) => {
   const [content, setContent] = useState('')
   const [deadline, setDeadline] = useState('')
 
@@ -12,6 +12,7 @@ const TaskForm = ({ createTask }) => {
     createTask({ content, deadline })
     setContent('')
     setDeadline('')
+    setTaskFormVisible(false)
   }
 
   const reset = () => {
