@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react"
+import { useEffect, useState } from "react"
 
 import EditTaskForm from "./EditTaskForm"
 
@@ -11,10 +11,21 @@ const Task = ({ task, updateTask, removeTask, pastDueTasks, setPastDueTasks}) =>
     const hideWhenVisible = { display: taskFormVisible ? 'none' : '' }
     const showWhenVisible = { display: taskFormVisible ? '' : 'none' }
 
-    // evaluates deadline and current time to determine if task is past due or not
+    // evaluates deadline and current time to determine if task is past due or not, then renders it
+    useEffect(() => {
+        const isTaskPastDue = new Date(task.deadline) < Date.now();
+        const isTaskAlreadyAdded = pastDueTasks.some(pastDueTask => pastDueTask.id === task.id);
+
+        if (isTaskPastDue && !isTaskAlreadyAdded) {
+            setPastDueTasks(prevPastDueTasks => [...prevPastDueTasks, task]);
+        } else if (!isTaskPastDue && isTaskAlreadyAdded) {
+            setPastDueTasks(prevPastDueTasks => prevPastDueTasks.filter(pastDueTask => pastDueTask.id !== task.id));
+        }
+    }, [task, pastDueTasks]);
+
+
     const pastDueTasksHandler = () => {
         if (new Date(task.deadline) < Date.now()) {
-            //setPastDueTasks(pastDueTasks + 1)
             return (
                 <h5 className="text-danger"><i>This task is past its due date!</i></h5>
             )

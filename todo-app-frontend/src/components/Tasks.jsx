@@ -9,7 +9,7 @@ import { Button, Container, Dropdown, DropdownButton } from "react-bootstrap"
 const Tasks = ({ tasks, setTasks, addTask, updateTask, removeTask }) => {
     const [taskFormVisible, setTaskFormVisible] = useState(false)
     const [filterName, setFilterName] = useState('')
-    const [pastDueTasks, setPastDueTasks] = useState(0)
+    const [pastDueTasks, setPastDueTasks] = useState([])
 
     const hideWhenVisible = { display: taskFormVisible ? 'none' : '' }
     const showWhenVisible = { display: taskFormVisible ? '' : 'none' }
@@ -54,6 +54,18 @@ const Tasks = ({ tasks, setTasks, addTask, updateTask, removeTask }) => {
         setFilterName('Due date - furthest')
     }
 
+    // displays amount of tasks that are past due, if applicable
+    const pastDueDisplay = () => {
+        if (pastDueTasks.length === 1) {
+            return <h3 className="text-danger">You have 1 task that is past due!</h3>
+        } else if (pastDueTasks.length > 1) {
+            return <h3 className="text-danger">You have {pastDueTasks.length} tasks that are past due!</h3>
+        } else {
+            return null
+        }
+    }
+    console.log(pastDueTasks)
+
     return (
         <Container className="m-2 p-2">
             <h1>Tasks</h1>
@@ -71,9 +83,7 @@ const Tasks = ({ tasks, setTasks, addTask, updateTask, removeTask }) => {
                             </div>
                         </div>
                         <div className="m-3 p-3 text-center">
-                        {pastDueTasks > -1
-                            ? <h3 className="text-danger">You have {pastDueTasks} tasks that are past due!</h3>
-                            : null}
+                        {pastDueDisplay()}
                         </div>
                     <Container className="d-flex justify-content-end align-items-center">
                         <DropdownButton size="sm" variant="link" title="Sort" drop="end">
