@@ -21,6 +21,7 @@ function App() {
   const [passwordConfirmation, setPasswordConfirmation] = useState('')
   const [user, setUser] = useState(null)
   const [tasks, setTasks] = useState([])
+  const [pastDueTasks, setPastDueTasks] = useState([])
   const [loginVisible, setLoginVisible] = useState(false)
   const [notification, setNotification] = useState(null)
 
@@ -152,26 +153,29 @@ function App() {
   }
 
   // remove task handling
-  const removeTask = async (task) => {
-    try {
-      await taskService.remove(task.id)
-      let tasks = await taskService.getAll()
-      const userTasks = tasks.filter(task => task.user.username === user.username)
-      const sorted = [...userTasks].sort((a, b) => {
-            return new Date(a.createdAt) - new Date(b.createdAt)
-        })
-      setTasks(sorted)
-      setNotification('Task removed!')
-        setTimeout(() => {
-          setNotification(null)
-        }, 5000)
-    } catch (error) {
-      setNotification(`${error.response.data.error}`)
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
-    }
+const removeTask = async (task) => {
+  try {
+    await taskService.remove(task.id);
+    let tasks = await taskService.getAll();
+    const userTasks = tasks.filter((t) => t.user.username === user.username);
+    const sorted = [...userTasks].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+
+    // Filter pastDueTasks based on the updated list of tasks
+    const updatedPastDueTasks = pastDueTasks.filter((pastDueTask) => pastDueTask.id !== task.id);
+
+    setTasks(sorted);
+    setPastDueTasks(updatedPastDueTasks);
+    setNotification('Task removed!');
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
+  } catch (error) {
+    setNotification(`${error.response.data.error}`);
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
   }
+};
 
   // clears fields on form switch
   const formSwitch = () => {
@@ -236,7 +240,15 @@ function App() {
       <NavbarComponent user={user} handleLogout={handleLogout} />
       <Notification notification={notification} />
       <div className="d-flex justify-content-center">
-        <Tasks tasks={tasks} setTasks={setTasks} addTask={addTask} updateTask={updateTask} removeTask={removeTask} />
+        <Tasks
+          tasks={tasks}
+          setTasks={setTasks}
+          addTask={addTask}
+          updateTask={updateTask}
+          removeTask={removeTask}
+          pastDueTasks={pastDueTasks}
+          setPastDueTasks={setPastDueTasks}
+        />
       </div>
     </div>
   )

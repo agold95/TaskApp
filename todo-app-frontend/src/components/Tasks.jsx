@@ -6,10 +6,9 @@ import TaskForm from "./TaskForm"
 // bootstrap components
 import { Button, Container, Dropdown, DropdownButton } from "react-bootstrap"
 
-const Tasks = ({ tasks, setTasks, addTask, updateTask, removeTask }) => {
+const Tasks = ({ tasks, setTasks, addTask, updateTask, removeTask, pastDueTasks, setPastDueTasks }) => {
     const [taskFormVisible, setTaskFormVisible] = useState(false)
     const [filterName, setFilterName] = useState('')
-    const [pastDueTasks, setPastDueTasks] = useState([])
 
     const hideWhenVisible = { display: taskFormVisible ? 'none' : '' }
     const showWhenVisible = { display: taskFormVisible ? '' : 'none' }
@@ -64,7 +63,6 @@ const Tasks = ({ tasks, setTasks, addTask, updateTask, removeTask }) => {
             return null
         }
     }
-    console.log(pastDueTasks)
 
     return (
         <Container className="m-2 p-2">
