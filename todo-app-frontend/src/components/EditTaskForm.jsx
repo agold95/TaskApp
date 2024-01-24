@@ -14,9 +14,18 @@ const EditTaskForm = ({ updateTask, task, setTaskFormVisible }) => {
     }
 
     // sets time format for input
-    const d = new Date(updatedTaskInfo.deadline)
-    const formattedDate = (new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString()).slice(0, -5)
-
+    const formDateValue = () => {
+        const d = new Date(updatedTaskInfo.deadline)
+        const formattedDate = (new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString()).slice(0, -5)
+        
+        // if task has no deadline, return empty string
+        if (updatedTaskInfo.deadline === null) {
+            return ''
+        } else {
+            return formattedDate
+        }
+    }
+    
     const editTask = event => {
         event.preventDefault()
         updateTask(task.id, { ...updatedTaskInfo })
@@ -45,7 +54,7 @@ const EditTaskForm = ({ updateTask, task, setTaskFormVisible }) => {
                 id="deadline"
                 type="datetime-local"
                 name="deadline"
-                value={formattedDate}
+                value={formDateValue()}
                 onChange={handleChange}
             />
             </Form.Group>
