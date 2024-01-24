@@ -19,10 +19,7 @@ const EditTaskForm = ({ updateTask, task, setTaskFormVisible }) => {
 
     const editTask = event => {
         event.preventDefault()
-        updateTask(task.id, {
-            ...updatedTaskInfo
-        })
-        
+        updateTask(task.id, { ...updatedTaskInfo })
         setTaskFormVisible(false)
     }
 
@@ -53,7 +50,8 @@ const EditTaskForm = ({ updateTask, task, setTaskFormVisible }) => {
             />
             </Form.Group>
             <div className='pt-3 d-flex justify-content-evenly'>
-            <Button variant="success" type="submit">Save</Button>
+                <Button className="m-1" variant="outline-secondary" onClick={() => setTaskFormVisible(false)}>Cancel</Button>
+                <Button variant="success" type="submit">Save</Button>
             </div>
         </Form>
         </Container>

@@ -16,19 +16,20 @@ const Task = ({ task, updateTask, removeTask, pastDueTasks, setPastDueTasks}) =>
         const isTaskPastDue = new Date(task.deadline) < Date.now()
         const isTaskAlreadyAdded = pastDueTasks.some(pastDueTask => pastDueTask.id === task.id)
 
-        if (isTaskPastDue && !isTaskAlreadyAdded) {
+        if (task.deadline === null) {
+            return 
+        } else if (isTaskPastDue && !isTaskAlreadyAdded) {
             setPastDueTasks(prevPastDueTasks => [...prevPastDueTasks, task])
         } else if (!isTaskPastDue && isTaskAlreadyAdded) {
             setPastDueTasks(prevPastDueTasks => prevPastDueTasks.filter(pastDueTask => pastDueTask.id !== task.id))
-        } 
+        }
     }, [task, pastDueTasks, setPastDueTasks])
 
-
     const pastDueTasksHandler = () => {
-        if (new Date(task.deadline) < Date.now()) {
-            return (
-                <h5 className="text-danger"><i>This task is past its due date!</i></h5>
-            )
+        if (task.deadline === null) {
+            return null
+        } else if (new Date(task.deadline) < Date.now()) {
+            return <h5 className="text-danger"><i>This task is past its due date!</i></h5>
         } else {
             return null
         }
@@ -47,9 +48,6 @@ const Task = ({ task, updateTask, removeTask, pastDueTasks, setPastDueTasks}) =>
             <div className="d-flex flex-column">
                 <div style={hideWhenVisible}>
                     <Button className="m-1" variant="outline-primary" onClick={() => setTaskFormVisible(true)}>Edit Task</Button>
-                </div>
-                <div style={showWhenVisible}>
-                    <Button className="m-1" variant="outline-secondary" onClick={() => setTaskFormVisible(false)}>Cancel</Button>
                 </div>
                 <div>
                     <Button className="m-1" variant="outline-danger" onClick={() => removeTask(task)}>Finish Task</Button>

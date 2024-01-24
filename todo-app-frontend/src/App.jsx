@@ -155,27 +155,27 @@ function App() {
   // remove task handling
 const removeTask = async (task) => {
   try {
-    await taskService.remove(task.id);
-    let tasks = await taskService.getAll();
-    const userTasks = tasks.filter((t) => t.user.username === user.username);
-    const sorted = [...userTasks].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+    await taskService.remove(task.id)
+    let tasks = await taskService.getAll()
+    const userTasks = tasks.filter((t) => t.user.username === user.username)
+    const sorted = [...userTasks].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
 
-    // Filter pastDueTasks based on the updated list of tasks
-    const updatedPastDueTasks = pastDueTasks.filter((pastDueTask) => pastDueTask.id !== task.id);
+    // Filters pastDueTasks based on the updated list of tasks
+    const updatedPastDueTasks = pastDueTasks.filter((pastDueTask) => pastDueTask.id !== task.id)
 
-    setTasks(sorted);
-    setPastDueTasks(updatedPastDueTasks);
-    setNotification('Task removed!');
+    setTasks(sorted)
+    setPastDueTasks(updatedPastDueTasks)
+    setNotification('Task removed!')
     setTimeout(() => {
-      setNotification(null);
-    }, 5000);
+      setNotification(null)
+    }, 5000)
   } catch (error) {
-    setNotification(`${error.response.data.error}`);
+    setNotification(`${error.response.data.error}`)
     setTimeout(() => {
-      setNotification(null);
-    }, 5000);
+      setNotification(null)
+    }, 5000)
   }
-};
+}
 
   // clears fields on form switch
   const formSwitch = () => {
