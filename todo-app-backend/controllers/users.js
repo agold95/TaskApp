@@ -37,12 +37,4 @@ usersRouter.post('/', async (request, response) => {
   response.status(201).json(savedUser)
 })
 
-// get all users
-usersRouter.get('/', async (request, response) => {
-   const users = await User
-    .find({}).populate('tasks', { content: 1, deadline: 1 })
-    
-  response.json(users)
-})
-
 module.exports = usersRouter

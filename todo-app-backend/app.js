@@ -28,13 +28,14 @@ app.use(express.static('dist'))
 app.use(express.json())
 app.use(middleware.requestLogger)
 app.use(middleware.tokenExtractor)
+app.use(middleware.userExtractor)
 
 // main routes
-app.use('/api/login', middleware.userExtractor, loginRouter)
-app.use('/api/tasks', middleware.userExtractor, tasksRouter)
+app.use('/api/tasks', tasksRouter)
 app.use('/api/users', usersRouter)
+app.use('/api/login', loginRouter)
 
-// resting route
+// testing route
 if (process.env.NODE_ENV === 'test') {
   const testingRouter = require('./controllers/testing')
   app.use('/api/testing', testingRouter)

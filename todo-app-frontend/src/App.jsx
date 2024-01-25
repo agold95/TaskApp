@@ -31,10 +31,9 @@ function App() {
       taskService
         .getAll()
         .then(initialTasks => {
-          const userTasks = initialTasks.filter(task => task.user.username === user.username)
-          const sorted = [...userTasks].sort((a, b) => {
+          const sorted = [...initialTasks].sort((a, b) => {
             return new Date(a.createdAt) - new Date(b.createdAt)
-        })
+          })
         setTasks(sorted)
         })
       }
@@ -134,8 +133,7 @@ function App() {
       await taskService.update(id, taskToUpdate)
       
       let tasks = await taskService.getAll()
-      const userTasks = tasks.filter(task => task.user.username === user.username)
-      const sorted = [...userTasks].sort((a, b) => {
+      const sorted = [...tasks].sort((a, b) => {
             return new Date(a.createdAt) - new Date(b.createdAt)
         })
       setTasks(sorted)
@@ -157,12 +155,10 @@ const removeTask = async (task) => {
   try {
     await taskService.remove(task.id)
     let tasks = await taskService.getAll()
-    const userTasks = tasks.filter((t) => t.user.username === user.username)
-    const sorted = [...userTasks].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+    const sorted = [...tasks].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
 
     // Filters pastDueTasks based on the updated list of tasks
     const updatedPastDueTasks = pastDueTasks.filter((pastDueTask) => pastDueTask.id !== task.id)
-
     setTasks(sorted)
     setPastDueTasks(updatedPastDueTasks)
     setNotification('Task removed!')

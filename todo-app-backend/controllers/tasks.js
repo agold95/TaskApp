@@ -3,7 +3,12 @@ const Task = require('../models/task')
 
 // get all tasks
 tasksRouter.get('/', async (request, response) => {
-  const tasks = await Task.find({}).populate('user', { username: 1 })
+  const user = request.user
+  if (!user) {
+    return response.status(401).json({ error: 'Not authorized' })
+  }
+
+  const tasks = await Task.find({ user: user.id }).populate('user', { username: 1 })
   response.json(tasks)
 })
 
