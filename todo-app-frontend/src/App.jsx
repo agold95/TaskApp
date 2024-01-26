@@ -30,10 +30,9 @@ function App() {
   useEffect(() => {
     // decodes token expiration time
     const isTokenExpired = token => {
-    const decodedToken = jwtDecode(token)
-    //console.log('Token expiration:', decodedToken.exp * 1000);
-    //console.log('Current time:', Date.now());
-    return decodedToken.exp * 1000 < Date.now()
+      const decodedToken = jwtDecode(token)
+      //console.log('Token expires in:', decodedToken.exp * 1000 - Date.now(), 'seconds')
+      return decodedToken.exp * 1000 < Date.now()
     }
     // logs user out if token is expired
     const interval = setInterval(() => {
@@ -63,7 +62,8 @@ function App() {
         if (user) {
           try {
             const userTasks = await taskService.getAll()
-            const sortedTasks = [...userTasks].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+            const sortedTasks = [...userTasks].sort(
+              (a, b) => new Date(a.createdAt) - new Date(b.createdAt))
             setTasks(sortedTasks)
           } catch (error) {
             setNotification(`${error.response.data.error}`)
