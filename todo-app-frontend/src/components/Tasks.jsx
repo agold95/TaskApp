@@ -56,9 +56,9 @@ const Tasks = ({ tasks, setTasks, addTask, updateTask, removeTask, pastDueTasks,
     // displays amount of tasks that are past due, if applicable
     const pastDueDisplay = () => {
         if (pastDueTasks.length === 1) {
-            return <h3 className="text-danger">You have 1 task that is past due!</h3>
+            return <h3 className="text-danger alert alert-danger">You have 1 task that is past due!</h3>
         } else if (pastDueTasks.length > 1) {
-            return <h3 className="text-danger">You have {pastDueTasks.length} tasks that are past due!</h3>
+            return <h3 className="text-danger alert alert-danger">You have {pastDueTasks.length} tasks that are past due!</h3>
         } else {
             return null
         }

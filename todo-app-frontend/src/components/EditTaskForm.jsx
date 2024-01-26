@@ -15,15 +15,14 @@ const EditTaskForm = ({ updateTask, task, setTaskFormVisible }) => {
 
     // sets time format for input
     const formDateValue = () => {
-        const d = new Date(updatedTaskInfo.deadline)
-        const formattedDate = (new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString()).slice(0, -5)
-        
-        // if task has no deadline, return empty string
-        if (updatedTaskInfo.deadline === null) {
+        const taskDeadline = new Date(updatedTaskInfo.deadline)
+
+        // checks if deadline string is valid input, if not returns empty
+        if (taskDeadline === null || taskDeadline === undefined || isNaN(taskDeadline.getTime())) {
             return ''
-        } else {
-            return formattedDate
         }
+
+        return (new Date(taskDeadline.getTime() - taskDeadline.getTimezoneOffset() * 60000).toISOString()).slice(0, -5)
     }
     
     const editTask = event => {

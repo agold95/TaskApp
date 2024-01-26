@@ -12,16 +12,6 @@ tasksRouter.get('/', async (request, response) => {
   response.json(tasks)
 })
 
-// get individual task
-tasksRouter.get('/:id', async (request, response) => {
-  const task = await Task.findById(request.params.id)
-  if (task) {
-    response.json(task)
-  } else {
-    response.status(404).end()
-  }
-})
-
 // create new task
 tasksRouter.post('/', async (request, response) => {
   const { content, deadline } = request.body

@@ -29,7 +29,7 @@ const Task = ({ task, updateTask, removeTask, pastDueTasks, setPastDueTasks}) =>
         if (task.deadline === null) {
             return null
         } else if (new Date(task.deadline) < Date.now()) {
-            return <h5 className="text-danger"><i>This task is past its due date!</i></h5>
+            return <h5 className="text-danger alert alert-danger"><i>This task is past due!</i></h5>
         } else {
             return null
         }
@@ -37,13 +37,16 @@ const Task = ({ task, updateTask, removeTask, pastDueTasks, setPastDueTasks}) =>
 
     return (
         <Container className="py-3 mb-3 border border-secondary rounded d-flex justify-content-between align-items-center">
-            <div>
+            <div style={hideWhenVisible}>
                 <h3>{task.content}</h3>
                 {task.deadline === null
                     ? <p>Due on: none specified</p>
                     : <p>Due on: {new Date(task.deadline).toLocaleDateString()} by {new Date(task.deadline).toLocaleTimeString()}</p>}
                 {pastDueTasksHandler()}
                 <small><i>Added on: {new Date(task.createdAt).toLocaleDateString()} at {new Date(task.createdAt).toLocaleTimeString()}</i></small>
+            </div>
+            <div style={showWhenVisible}>
+                <EditTaskForm task={task} updateTask={updateTask} setTaskFormVisible={setTaskFormVisible} />
             </div>
             <div className="d-flex flex-column">
                 <div style={hideWhenVisible}>
@@ -52,9 +55,6 @@ const Task = ({ task, updateTask, removeTask, pastDueTasks, setPastDueTasks}) =>
                 <div>
                     <Button className="m-1" variant="outline-danger" onClick={() => removeTask(task)}>Finish Task</Button>
                 </div>
-            </div>
-            <div style={showWhenVisible}>
-                <EditTaskForm task={task} updateTask={updateTask} setTaskFormVisible={setTaskFormVisible} />
             </div>
         </Container>
     )

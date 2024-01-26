@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import { jwtDecode } from "jwt-decode"
 
 // services
 import taskService from './services/tasks'
@@ -25,18 +26,24 @@ function App() {
   const [loginVisible, setLoginVisible] = useState(false)
   const [notification, setNotification] = useState(null)
 
-  // initializes all tasks and sorts by users username
+  // checks user token every minute for expiration
   useEffect(() => {
-    if (user) {
-      taskService
-        .getAll()
-        .then(initialTasks => {
-          const sorted = [...initialTasks].sort((a, b) => {
-            return new Date(a.createdAt) - new Date(b.createdAt)
-          })
-        setTasks(sorted)
-        })
+    // decodes token expiration time
+    const isTokenExpired = token => {
+    const decodedToken = jwtDecode(token)
+    //console.log('Token expiration:', decodedToken.exp * 1000);
+    //console.log('Current time:', Date.now());
+    return decodedToken.exp * 1000 < Date.now()
+    }
+    // logs user out if token is expired
+    const interval = setInterval(() => {
+      if (user && isTokenExpired(user.token)) {
+        handleLogout()
+        setNotification('Session expired, please log in again.')
       }
+    }, 60000)
+
+    return () => clearInterval(interval)
   }, [user])
 
   // sets users json web token
@@ -49,6 +56,25 @@ function App() {
       taskService.setToken(user.token)
     }
   }, [])
+
+    // initializes users tasks
+    useEffect(() => {
+      const getTasks = async () => {
+        if (user) {
+          try {
+            const userTasks = await taskService.getAll()
+            const sortedTasks = [...userTasks].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+            setTasks(sortedTasks)
+          } catch (error) {
+            setNotification(`${error.response.data.error}`)
+            setTimeout(() => {
+              setNotification(null)
+            }, 5000)
+          }
+        }
+      }
+      getTasks()
+    }, [user])
 
   // login handling
   const handleLogin = async (event) => {
@@ -64,6 +90,10 @@ function App() {
       setUser(user)
       setUsername('')
       setPassword('')
+      setNotification(`${user.username} successfully logged in!`)
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000)
     } catch (error) {
       console.log(error)
       setNotification(`${error.response.data.error}`)
