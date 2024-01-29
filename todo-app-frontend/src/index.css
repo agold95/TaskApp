@@ -1,0 +1,83 @@
+:root {
+    --green-primary: #198754;
+    --green-secondary: #126b42;
+    --blue-primary: #0d6efd;
+    --blue-secondary: #0a50b9;
+    --red-primary: #dc3545;
+    --gray-primary: #6c757d;
+    --gray-secondary: #585e64;
+    --bg-primary: #b4b4b4;
+}
+
+body {
+    font-family: "Rubik", sans-serif;
+    background-color: var(--bg-primary);
+}
+
+svg {
+    cursor: pointer;
+}
+
+.plus {
+    color: var(--green-primary)
+}
+
+.plus:hover {
+    color: var(--green-secondary)
+}
+
+.minus {
+    color: var(--gray-primary)
+}
+
+.minus:hover {
+    color: var(--gray-secondary)
+}
+
+.edit {
+    color: var(--blue-primary)
+}
+
+.edit:hover {
+    color: var(--blue-secondary)
+}
+
+.finish {
+    color: var(--green-primary)
+}
+
+.finish:hover {
+    color: var(--green-secondary)
+}
+
+.alert-box {
+    color: var(--red-primary);
+    cursor: auto;
+    animation: pulse 3s infinite;
+}
+
+@-webkit-keyframes pulse {
+  0% {
+    -webkit-box-shadow: 0 0 0 0 #dc3546b9;
+  }
+  70% {
+      -webkit-box-shadow: 0 0 0 10px #dc3545;
+  }
+  100% {
+      -webkit-box-shadow: 0 0 0 0 #dc3545;
+  }
+}
+@keyframes pulse {
+  0% {
+    -moz-box-shadow: 0 0 0 0 #dc3546b9;
+    box-shadow: 0 0 0 0 #dc3546b9;
+  }
+  70% {
+      -moz-box-shadow: 0 0 0 10px #dc354600;
+      box-shadow: 0 0 0 10px #dc354600;
+  }
+  100% {
+      -moz-box-shadow: 0 0 0 0 #dc354600;
+      box-shadow: 0 0 0 0 #dc354600;
+  }
+}

@@ -22,8 +22,8 @@ const TaskForm = ({ createTask, setTaskFormVisible }) => {
 
   return (
     <Container className="py-3 my-3">
-      <h2 className="text-center">Add new task</h2>
-      <Form className="p-3 border border-secondary rounded" onSubmit={addTask}>
+      <Form className="p-3 border border-2 border-secondary rounded" onSubmit={addTask}>
+        <h2 className="text-center">Add new task</h2>
         <Form.Group>
           <Form.Text>Task</Form.Text>
           <Form.Control
@@ -45,7 +45,7 @@ const TaskForm = ({ createTask, setTaskFormVisible }) => {
           />
         </Form.Group>
         <div className='pt-3 d-flex justify-content-evenly'>
-          <Button className="mx-4" size="sm" variant="danger" type="reset" onClick={() => reset()}>Reset</Button>
+          <Button className="mx-4" variant="secondary" type="reset" onClick={() => reset()}>Reset</Button>
           <Button variant="success" type="submit">Add Task</Button>
         </div>
       </Form>

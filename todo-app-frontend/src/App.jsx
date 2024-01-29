@@ -191,7 +191,7 @@ const removeTask = async (task) => {
     const updatedPastDueTasks = pastDueTasks.filter((pastDueTask) => pastDueTask.id !== task.id)
     setTasks(sorted)
     setPastDueTasks(updatedPastDueTasks)
-    setNotification('Task removed!')
+    setNotification('Task completed!')
     setTimeout(() => {
       setNotification(null)
     }, 5000)
@@ -224,9 +224,9 @@ const removeTask = async (task) => {
 
     return (
       <div className="d-flex flex-column align-items-center">
-        <h1 className="p-5 m-5">Welcome to Task App</h1>
+        <h1 className="p-5 m-5">Welcome to TaskApp</h1>
         <div>
-          <p>Login or create a new account to start using!</p>
+          <p>Log in or create a new account to start using!</p>
         </div>
         <div className="p-5">
           <Notification notification={notification} />

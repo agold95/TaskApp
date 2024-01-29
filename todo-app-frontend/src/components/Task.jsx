@@ -3,7 +3,13 @@ import { useEffect, useState } from "react"
 import EditTaskForm from "./EditTaskForm"
 
 // bootstrap components
-import { Button, Container } from "react-bootstrap"
+import { Container } from "react-bootstrap"
+
+// MDI components
+import Icon from "@mdi/react"
+import { mdiSquareEditOutline } from "@mdi/js"
+import { mdiCheckboxMarkedOutline } from "@mdi/js"
+import { mdiAlertBoxOutline } from "@mdi/js"
 
 const Task = ({ task, updateTask, removeTask, pastDueTasks, setPastDueTasks}) => {
     const [taskFormVisible, setTaskFormVisible] = useState(false)
@@ -26,34 +32,34 @@ const Task = ({ task, updateTask, removeTask, pastDueTasks, setPastDueTasks}) =>
     }, [task, pastDueTasks, setPastDueTasks])
 
     const pastDueTasksHandler = () => {
-        if (task.deadline === null) {
-            return null
-        } else if (new Date(task.deadline) < Date.now()) {
-            return <h5 className="text-danger alert alert-danger"><i>This task is past due!</i></h5>
-        } else {
-            return null
-        }
+        return task.deadline !== null && new Date(task.deadline) < Date.now()
+            ? <Icon title="This task is past due!" className="alert-box" path={mdiAlertBoxOutline} size={3} />
+            : null
     }
 
     return (
-        <Container className="py-3 mb-3 border border-secondary rounded d-flex justify-content-between align-items-center">
+        <Container className={`py-3 mb-3 border ${task.deadline !== null && new Date(task.deadline) < Date.now() ? 'border-danger border-3' : 'border-secondary border-2'} bg-light rounded d-flex align-items-center justify-content-between`}>
             <div style={hideWhenVisible}>
                 <h3>{task.content}</h3>
                 {task.deadline === null
                     ? <p>Due on: none specified</p>
                     : <p>Due on: {new Date(task.deadline).toLocaleDateString()} by {new Date(task.deadline).toLocaleTimeString()}</p>}
-                {pastDueTasksHandler()}
                 <small><i>Added on: {new Date(task.createdAt).toLocaleDateString()} at {new Date(task.createdAt).toLocaleTimeString()}</i></small>
             </div>
-            <div style={showWhenVisible}>
+            <div style={showWhenVisible} className="flex-grow-1">
                 <EditTaskForm task={task} updateTask={updateTask} setTaskFormVisible={setTaskFormVisible} />
+            </div>
+            <div style={hideWhenVisible}>
+                {pastDueTasksHandler()}
             </div>
             <div className="d-flex flex-column">
                 <div style={hideWhenVisible}>
-                    <Button className="m-1" variant="outline-primary" onClick={() => setTaskFormVisible(true)}>Edit Task</Button>
-                </div>
-                <div>
-                    <Button className="m-1" variant="outline-danger" onClick={() => removeTask(task)}>Finish Task</Button>
+                    <div className="m-2 py-1">
+                        <Icon className="edit" title="Edit task" path={mdiSquareEditOutline} size={2} onClick={() => setTaskFormVisible(true)}></Icon>
+                    </div>
+                    <div className="m-2 py-1">
+                        <Icon className="finish" title="Finish task" path={mdiCheckboxMarkedOutline} size={2} onClick={() => removeTask(task)}></Icon>
+                    </div>
                 </div>
             </div>
         </Container>

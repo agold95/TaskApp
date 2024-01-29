@@ -2,6 +2,8 @@ require('express-async-errors')
 const express = require('express')
 const cors = require('cors')
 const app = express()
+const helmet = require('helmet')
+const compression = require('compression')
 
 const loginRouter = require('./controllers/login')
 const usersRouter = require('./controllers/users')
@@ -23,9 +25,18 @@ mongoose.connect(config.MONGODB_URI)
     logger.error('error connecting to MongoDB:', error.message)
   })
 
+const RateLimit = require('express-rate-limit')
+const limiter = RateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 30,
+})
+
+app.use(limiter)
+app.use(compression())
 app.use(cors())
 app.use(express.static('dist'))
 app.use(express.json())
+app.use(helmet())
 app.use(middleware.requestLogger)
 app.use(middleware.tokenExtractor)
 app.use(middleware.userExtractor)

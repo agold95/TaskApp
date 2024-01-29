@@ -4,7 +4,12 @@ import Task from "./Task"
 import TaskForm from "./TaskForm"
 
 // bootstrap components
-import { Button, Container, Dropdown, DropdownButton } from "react-bootstrap"
+import { Container, Dropdown, DropdownButton } from "react-bootstrap"
+
+// MDI components
+import Icon from "@mdi/react"
+import { mdiPlusCircle } from "@mdi/js"
+import { mdiMinusCircle } from "@mdi/js"
 
 const Tasks = ({ tasks, setTasks, addTask, updateTask, removeTask, pastDueTasks, setPastDueTasks }) => {
     const [taskFormVisible, setTaskFormVisible] = useState(false)
@@ -56,40 +61,42 @@ const Tasks = ({ tasks, setTasks, addTask, updateTask, removeTask, pastDueTasks,
     // displays amount of tasks that are past due, if applicable
     const pastDueDisplay = () => {
         if (pastDueTasks.length === 1) {
-            return <h3 className="text-danger alert alert-danger">You have 1 task that is past due!</h3>
+            return <h3 className="text-danger alert alert-danger m-0 border-2">You have 1 task that is past due!</h3>
         } else if (pastDueTasks.length > 1) {
-            return <h3 className="text-danger alert alert-danger">You have {pastDueTasks.length} tasks that are past due!</h3>
+            return <h3 className="text-danger alert alert-danger m-0 border-2">You have {pastDueTasks.length} tasks that are past due!</h3>
         } else {
             return null
         }
     }
 
     return (
-        <Container className="m-2 p-2">
+        <Container className="m-2 p-2 w-50">
             <h1>Tasks</h1>
+            <div className="m-3 p-3 text-center">
+                {pastDueDisplay()}
+            </div>
             <Container className="d-flex flex-column align-items-end">
                 <Container>
+                    <div>
                         <div style={showWhenVisible}>
-                            <div className="d-flex justify-content-center">
-                                <Button variant="secondary" onClick={() => setTaskFormVisible(false)}>Hide new task form</Button> 
+                            <div className="d-flex justify-content-center p-3">
+                                <Icon className="minus" title="Close task form" path={mdiMinusCircle} size={3} onClick={() => setTaskFormVisible(false)}>Hide new task form</Icon> 
                             </div>
                             <TaskForm setTaskFormVisible={setTaskFormVisible} createTask={addTask} />
                         </div>
                         <div style={hideWhenVisible}>
-                            <div className="d-flex justify-content-center">
-                                <Button onClick={() => setTaskFormVisible(true)}>Add a new task</Button>
+                            <div className="d-flex justify-content-center p-3">
+                                <Icon className="plus" title="Add task" path={mdiPlusCircle} size={3} onClick={() => setTaskFormVisible(true)}>Add a new task</Icon>
                             </div>
                         </div>
-                        <div className="m-3 p-3 text-center">
-                        {pastDueDisplay()}
-                        </div>
+                    </div>
                     <Container className="d-flex justify-content-end align-items-center">
                         <DropdownButton size="sm" variant="link" title="Sort" drop="end">
-                            <Dropdown.Header>Date added:</Dropdown.Header>
+                            <Dropdown.Header>Date added -</Dropdown.Header>
                             <Dropdown.Item onClick={sortCreatedAscending}>oldest</Dropdown.Item>
                             <Dropdown.Item onClick={sortCreatedDescending}>newest</Dropdown.Item>
                             <Dropdown.Divider />
-                            <Dropdown.Header>Due date:</Dropdown.Header>
+                            <Dropdown.Header>Due date -</Dropdown.Header>
                             <Dropdown.Item onClick={sortDueDateClosest}>closest</Dropdown.Item>
                             <Dropdown.Item onClick={sortDueDateFurthest}>furthest</Dropdown.Item>
                         </DropdownButton>

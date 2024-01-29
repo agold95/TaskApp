@@ -16,12 +16,10 @@ const EditTaskForm = ({ updateTask, task, setTaskFormVisible }) => {
     // sets time format for input
     const formDateValue = () => {
         const taskDeadline = new Date(updatedTaskInfo.deadline)
-
-        // checks if deadline string is valid input, if not returns empty
-        if (taskDeadline === null || taskDeadline === undefined || isNaN(taskDeadline.getTime())) {
+        // checks if deadline is a valid date
+        if (!updatedTaskInfo.deadline || isNaN(taskDeadline.getTime())) {
             return ''
         }
-
         return (new Date(taskDeadline.getTime() - taskDeadline.getTimezoneOffset() * 60000).toISOString()).slice(0, -5)
     }
     
@@ -32,9 +30,9 @@ const EditTaskForm = ({ updateTask, task, setTaskFormVisible }) => {
     }
 
     return (
-        <Container className="py-3 my-3">
+        <Container>
         <h2 className="text-center">Edit Task</h2>
-        <Form className="p-3 border border-secondary rounded" onSubmit={editTask}>
+        <Form onSubmit={editTask}>
             <Form.Group>
             <Form.Text>Task</Form.Text>
             <Form.Control
@@ -57,8 +55,8 @@ const EditTaskForm = ({ updateTask, task, setTaskFormVisible }) => {
                 onChange={handleChange}
             />
             </Form.Group>
-            <div className='pt-3 d-flex justify-content-evenly'>
-                <Button className="m-1" variant="outline-secondary" onClick={() => setTaskFormVisible(false)}>Cancel</Button>
+            <div className='pt-3 d-flex justify-content-evenly align-items-center'>
+                <Button className="m-1" variant="secondary" onClick={() => setTaskFormVisible(false)}>Cancel</Button>
                 <Button variant="success" type="submit">Save</Button>
             </div>
         </Form>
