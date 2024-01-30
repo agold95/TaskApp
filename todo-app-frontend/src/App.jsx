@@ -13,7 +13,6 @@ import EntryForms from "./components/EntryForms"
 function App() {
   const [user, setUser] = useState(null)
   const [tasks, setTasks] = useState([])
-  const [pastDueTasks, setPastDueTasks] = useState([])
   const [notification, setNotification] = useState(null)
 
   // checks user token every minute for expiration
@@ -93,8 +92,6 @@ function App() {
         <Tasks
           tasks={tasks}
           setTasks={setTasks}
-          pastDueTasks={pastDueTasks}
-          setPastDueTasks={setPastDueTasks}
           setNotification={setNotification}
         />
       </div>

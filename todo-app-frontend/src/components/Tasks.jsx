@@ -20,11 +20,10 @@ import { mdiMinusCircle } from "@mdi/js"
 const Tasks = ({
     tasks,
     setTasks,
-    pastDueTasks,
-    setPastDueTasks,
     setNotification
 }) => {
     const [taskFormVisible, setTaskFormVisible] = useState(false)
+    const [pastDueTasks, setPastDueTasks] = useState([])
 
     // useEffect hook for rending tasks
     useEffect(() => {
@@ -106,8 +105,6 @@ const Tasks = ({
 Tasks.propTypes = {
     tasks: PropTypes.array.isRequired,
     setTasks: PropTypes.func.isRequired,
-    pastDueTasks: PropTypes.array.isRequired,
-    setPastDueTasks: PropTypes.func.isRequired,
     setNotification: PropTypes.func.isRequired,
 }
 
