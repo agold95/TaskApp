@@ -3,7 +3,10 @@ import PropTypes from 'prop-types'
 // bootstrap components
 import { Container, Navbar, Button } from "react-bootstrap"
 
-const NavbarComponent = ({ user, handleLogout }) => {
+const NavbarComponent = ({
+  user,
+  handleLogout
+}) => {
     return (
       <Navbar className="bg-secondary">
         <Container></Container>

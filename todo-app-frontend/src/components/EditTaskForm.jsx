@@ -4,7 +4,11 @@ import PropTypes from 'prop-types'
 // bootstrap components
 import { Container, Form, Button } from "react-bootstrap"
 
-const EditTaskForm = ({ updateTask, task, setTaskFormVisible }) => {
+const EditTaskForm = ({
+    updateTask,
+    task,
+    setTaskFormVisible
+}) => {
     const [updatedTaskInfo, setUpdatedTaskInfo] = useState({
         content: task.content,
         deadline: task.deadline

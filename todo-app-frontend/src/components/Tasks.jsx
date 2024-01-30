@@ -99,23 +99,25 @@ const Tasks = ({
                             </div>
                         </div>
                     </div>
-                    <Container className="d-flex justify-content-end align-items-center">
-                        <DropdownButton size="sm" variant="link" title="Sort" drop="end">
-                            <Dropdown.Header>Date added -</Dropdown.Header>
-                            <Dropdown.Item onClick={sortCreatedAscending}>oldest</Dropdown.Item>
-                            <Dropdown.Item onClick={sortCreatedDescending}>newest</Dropdown.Item>
-                            <Dropdown.Divider />
-                            <Dropdown.Header>Due date -</Dropdown.Header>
-                            <Dropdown.Item onClick={sortDueDateClosest}>closest</Dropdown.Item>
-                            <Dropdown.Item onClick={sortDueDateFurthest}>furthest</Dropdown.Item>
-                        </DropdownButton>
-                        <div>
-                            {filterName === ''
-                                ? <small className="m-0">Date added - oldest</small>
-                                : <small className="m-0">{ filterName }</small>
-                            }
-                        </div>
-                    </Container>
+                    {tasks.length > 0 && (
+                        <Container className="d-flex justify-content-end align-items-center">
+                            <DropdownButton size="sm" variant="link" title="Sort" drop="end">
+                                <Dropdown.Header>Date added -</Dropdown.Header>
+                                <Dropdown.Item onClick={sortCreatedAscending}>oldest</Dropdown.Item>
+                                <Dropdown.Item onClick={sortCreatedDescending}>newest</Dropdown.Item>
+                                <Dropdown.Divider />
+                                <Dropdown.Header>Due date -</Dropdown.Header>
+                                <Dropdown.Item onClick={sortDueDateClosest}>closest</Dropdown.Item>
+                                <Dropdown.Item onClick={sortDueDateFurthest}>furthest</Dropdown.Item>
+                            </DropdownButton>
+                            <div>
+                                {filterName === ''
+                                    ? <small className="m-0">Date added - oldest</small>
+                                    : <small className="m-0">{ filterName }</small>
+                                }
+                            </div>
+                        </Container>
+                    )}
                     {tasks.map(task =>
                         <Task
                         key={task.id}

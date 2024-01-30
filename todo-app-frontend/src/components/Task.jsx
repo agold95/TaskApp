@@ -12,7 +12,13 @@ import { mdiSquareEditOutline } from "@mdi/js"
 import { mdiCheckboxMarkedOutline } from "@mdi/js"
 import { mdiAlertBoxOutline } from "@mdi/js"
 
-const Task = ({ task, updateTask, removeTask, pastDueTasks, setPastDueTasks}) => {
+const Task = ({
+    task,
+    updateTask,
+    removeTask,
+    pastDueTasks,
+    setPastDueTasks
+}) => {
     const [taskFormVisible, setTaskFormVisible] = useState(false)
 
     const hideWhenVisible = { display: taskFormVisible ? 'none' : '' }
@@ -20,12 +26,15 @@ const Task = ({ task, updateTask, removeTask, pastDueTasks, setPastDueTasks}) =>
 
     // evaluates deadline and current time to determine if task is past due or not, then renders it
     useEffect(() => {
+        // if task has no deadline, return
+        if (task.deadline === null) {
+            return
+        }
+
         const isTaskPastDue = new Date(task.deadline) < Date.now()
         const isTaskAlreadyAdded = pastDueTasks.some(pastDueTask => pastDueTask.id === task.id)
 
-        if (task.deadline === null) {
-            return 
-        } else if (isTaskPastDue && !isTaskAlreadyAdded) {
+        if (isTaskPastDue && !isTaskAlreadyAdded) {
             setPastDueTasks(prevPastDueTasks => [...prevPastDueTasks, task])
         } else if (!isTaskPastDue && isTaskAlreadyAdded) {
             setPastDueTasks(prevPastDueTasks => prevPastDueTasks.filter(pastDueTask => pastDueTask.id !== task.id))
