@@ -5,7 +5,7 @@ import { Container, Navbar, Button } from "react-bootstrap"
 
 const NavbarComponent = ({
   user,
-  handleLogout
+  handleLogout 
 }) => {
     return (
       <Navbar className="bg-secondary">

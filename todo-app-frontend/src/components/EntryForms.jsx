@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import PropTypes from 'prop-types'
 
 // services
 import taskService from '../services/tasks'
@@ -131,6 +132,11 @@ const EntryForms = ({
         </div>
       </div>
     )
+}
+
+EntryForms.propTypes = {
+    setNotification: PropTypes.func.isRequired,
+    setUser: PropTypes.func.isRequired
 }
 
 export default EntryForms
