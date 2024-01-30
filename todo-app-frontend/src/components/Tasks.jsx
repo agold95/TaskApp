@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import PropTypes from 'prop-types'
 
 import Task from "./Task"
 import TaskForm from "./TaskForm"
@@ -11,7 +12,15 @@ import Icon from "@mdi/react"
 import { mdiPlusCircle } from "@mdi/js"
 import { mdiMinusCircle } from "@mdi/js"
 
-const Tasks = ({ tasks, setTasks, addTask, updateTask, removeTask, pastDueTasks, setPastDueTasks }) => {
+const Tasks = ({
+    tasks,
+    setTasks,
+    addTask,
+    updateTask,
+    removeTask,
+    pastDueTasks,
+    setPastDueTasks
+}) => {
     const [taskFormVisible, setTaskFormVisible] = useState(false)
     const [filterName, setFilterName] = useState('')
 
@@ -121,6 +130,16 @@ const Tasks = ({ tasks, setTasks, addTask, updateTask, removeTask, pastDueTasks,
             </Container>
         </Container>
     )
+}
+
+Tasks.propTypes = {
+    tasks: PropTypes.array.isRequired,
+    setTasks: PropTypes.func.isRequired,
+    addTask: PropTypes.func.isRequired,
+    updateTask: PropTypes.func.isRequired,
+    removeTask: PropTypes.func.isRequired,
+    pastDueTasks: PropTypes.array.isRequired,
+    setPastDueTasks: PropTypes.func.isRequired
 }
 
 export default Tasks

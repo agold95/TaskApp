@@ -1,4 +1,5 @@
 import { useState } from "react"
+import PropTypes from 'prop-types'
 
 //bootstrap components
 import { Button, Container, Form } from "react-bootstrap"
@@ -51,6 +52,11 @@ const TaskForm = ({ createTask, setTaskFormVisible }) => {
       </Form>
     </Container>
   )
+}
+
+TaskForm.propTypes = {
+  createTask: PropTypes.func.isRequired,
+  setTaskFormVisible: PropTypes.func.isRequired
 }
 
 export default TaskForm

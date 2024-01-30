@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import PropTypes from 'prop-types'
 
 import EditTaskForm from "./EditTaskForm"
 
@@ -64,6 +65,14 @@ const Task = ({ task, updateTask, removeTask, pastDueTasks, setPastDueTasks}) =>
             </div>
         </Container>
     )
+}
+
+Task.propTypes = {
+    task: PropTypes.object.isRequired,
+    updateTask: PropTypes.func.isRequired,
+    removeTask: PropTypes.func.isRequired,
+    pastDueTasks: PropTypes.array.isRequired,
+    setPastDueTasks: PropTypes.func.isRequired
 }
 
 export default Task

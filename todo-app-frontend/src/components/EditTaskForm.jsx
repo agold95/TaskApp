@@ -1,4 +1,5 @@
 import { useState } from "react"
+import PropTypes from 'prop-types'
 
 // bootstrap components
 import { Container, Form, Button } from "react-bootstrap"
@@ -62,6 +63,12 @@ const EditTaskForm = ({ updateTask, task, setTaskFormVisible }) => {
         </Form>
         </Container>
     )
+}
+
+EditTaskForm.propTypes = {
+    updateTask: PropTypes.func.isRequired,
+    task: PropTypes.object.isRequired,
+    setTaskFormVisible: PropTypes.func.isRequired
 }
 
 export default EditTaskForm

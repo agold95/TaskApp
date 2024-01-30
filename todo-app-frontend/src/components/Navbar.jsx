@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types'
+
 // bootstrap components
 import { Container, Navbar, Button } from "react-bootstrap"
 
@@ -15,6 +17,11 @@ const NavbarComponent = ({ user, handleLogout }) => {
         </Container>
       </Navbar>
     )
+}
+
+NavbarComponent.propTypes = {
+  user: PropTypes.object.isRequired,
+  handleLogout: PropTypes.func.isRequired
 }
 
 export default NavbarComponent
