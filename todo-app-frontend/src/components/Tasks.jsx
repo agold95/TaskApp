@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react"
 import PropTypes from 'prop-types'
 
+// services
+import taskService from '../services/tasks'
+
 // components
 import Task from "./Task"
 import TaskForm from "./TaskForm"
@@ -17,21 +20,33 @@ import { mdiMinusCircle } from "@mdi/js"
 const Tasks = ({
     tasks,
     setTasks,
-    addTask,
-    updateTask,
-    removeTask,
     pastDueTasks,
-    setPastDueTasks
+    setPastDueTasks,
+    setNotification
 }) => {
     const [taskFormVisible, setTaskFormVisible] = useState(false)
-
-    const hideWhenVisible = { display: taskFormVisible ? 'none' : '' }
-    const showWhenVisible = { display: taskFormVisible ? '' : 'none' }
 
     // useEffect hook for rending tasks
     useEffect(() => {
         setTasks(tasks)
     }, [tasks, setTasks])
+
+    // add task handling
+    const addTask = async (newTask) => {
+        try {
+        const createdTask = await taskService.create(newTask)
+        setTasks(tasks.concat(createdTask))
+        setNotification('Task added!')
+            setTimeout(() => {
+                setNotification(null)
+            }, 1 * 5 * 1000)
+        } catch (error) {
+        setNotification(`${error.response.data.error}`)
+        setTimeout(() => {
+            setNotification(null)
+        }, 1 * 5 * 1000)
+        }
+    }
 
     // displays amount of tasks that are past due, if applicable
     const pastDueDisplay = () => {
@@ -43,6 +58,10 @@ const Tasks = ({
             </h3>
         ) : null
     }
+
+    // renders forms on button switch
+    const hideWhenVisible = { display: taskFormVisible ? 'none' : '' }
+    const showWhenVisible = { display: taskFormVisible ? '' : 'none' }
 
     return (
         <Container className="m-2 p-2 w-50">
@@ -72,10 +91,10 @@ const Tasks = ({
                         <Task
                         key={task.id}
                         task={task}
-                        updateTask={updateTask}
-                        removeTask={removeTask}
                         pastDueTasks={pastDueTasks}
                         setPastDueTasks={setPastDueTasks}
+                        setTasks={setTasks}
+                        setNotification={setNotification}
                         />
                     )}
                 </Container>
@@ -87,11 +106,9 @@ const Tasks = ({
 Tasks.propTypes = {
     tasks: PropTypes.array.isRequired,
     setTasks: PropTypes.func.isRequired,
-    addTask: PropTypes.func.isRequired,
-    updateTask: PropTypes.func.isRequired,
-    removeTask: PropTypes.func.isRequired,
     pastDueTasks: PropTypes.array.isRequired,
-    setPastDueTasks: PropTypes.func.isRequired
+    setPastDueTasks: PropTypes.func.isRequired,
+    setNotification: PropTypes.func.isRequired,
 }
 
 export default Tasks

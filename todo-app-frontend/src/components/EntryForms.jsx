@@ -22,9 +22,6 @@ const EntryForms = ({
     const [passwordConfirmation, setPasswordConfirmation] = useState('')
     const [loginVisible, setLoginVisible] = useState(false)
 
-    const hideWhenVisible = { display: loginVisible ? 'none' : '' }
-    const showWhenVisible = { display: loginVisible ? '' : 'none' }
-
     // login handling
     const handleLogin = async (event) => {
         event.preventDefault()
@@ -42,7 +39,7 @@ const EntryForms = ({
         setNotification(`${user.username} successfully logged in!`)
         setTimeout(() => {
             setNotification(null)
-        }, 5000)
+        }, 1 * 5 * 1000)
         } catch (error) {
         console.log(error)
         setNotification(`${error.response.data.error}`)
@@ -50,7 +47,7 @@ const EntryForms = ({
         setPassword('')
         setTimeout(() => {
             setNotification(null)
-        }, 5000)
+        }, 1 * 5 * 1000)
         }
     }
 
@@ -69,7 +66,7 @@ const EntryForms = ({
         setNotification(`New user ${newUser.username} created!`)
         setTimeout(() => {
             setNotification(null)
-        }, 5000)
+        }, 1 * 5 * 1000)
         } catch (error) {
         console.log(error)
         setUsername('')
@@ -78,7 +75,7 @@ const EntryForms = ({
         setNotification(`${error.response.data.error}`)
         setTimeout(() => {
             setNotification(null)
-        }, 5000)
+        }, 1 * 5 * 1000)
         }
     }
 
@@ -95,6 +92,10 @@ const EntryForms = ({
         setPasswordConfirmation('')
         }
     }
+
+    // renders forms on button switch
+    const hideWhenVisible = { display: loginVisible ? 'none' : '' }
+    const showWhenVisible = { display: loginVisible ? '' : 'none' }
 
     return (
       <div className="d-flex flex-column align-items-center">

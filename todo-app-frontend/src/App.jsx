@@ -46,95 +46,30 @@ function App() {
     }
   }, [])
 
-    // initializes users tasks
-    useEffect(() => {
-      const getTasks = async () => {
-        if (user) {
-          try {
-            const userTasks = await taskService.getAll()
-            const sortedTasks = [...userTasks].sort(
-              (a, b) => new Date(a.createdAt) - new Date(b.createdAt))
-            setTasks(sortedTasks)
-          } catch (error) {
-            setNotification(`${error.response.data.error}`)
-            setTimeout(() => {
-              setNotification(null)
-            }, 5000)
-          }
+  // initializes users tasks
+  useEffect(() => {
+    const getTasks = async () => {
+      if (user) {
+        try {
+          const userTasks = await taskService.getAll()
+          const sortedTasks = [...userTasks].sort(
+            (a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+          setTasks(sortedTasks)
+        } catch (error) {
+          setNotification(`${error.response.data.error}`)
+          setTimeout(() => {
+            setNotification(null)
+          }, 1 * 5 * 1000)
         }
       }
-      getTasks()
-    }, [user])
-
+    }
+    getTasks()
+  }, [user])
 
   // logout handling
   const handleLogout = () => {
     window.localStorage.clear()
     setUser(null)
-  }
-
-  // add task handling
-  const addTask = async (newTask) => {
-    try {
-      const createdTask = await taskService.create(newTask)
-      setTasks(tasks.concat(createdTask))
-      setNotification('Task added!')
-          setTimeout(() => {
-            setNotification(null)
-          }, 5000)
-    } catch (error) {
-      setNotification(`${error.response.data.error}`)
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
-    }
-  }
-
-  // update task handling
-  const updateTask = async (id, task) => {
-    try {
-      const taskToUpdate = { ...task, content: task.content, deadline: task.deadline }
-      await taskService.update(id, taskToUpdate)
-      
-      let tasks = await taskService.getAll()
-      const sorted = [...tasks].sort((a, b) => {
-            return new Date(a.createdAt) - new Date(b.createdAt)
-        })
-      setTasks(sorted)
-      setNotification('Task updated!')
-        setTimeout(() => {
-          setNotification(null)
-        }, 5000)
-    } catch (error) {
-      console.log(error)
-      setNotification(`${error.response.data.error}`)
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
-    }
-  }
-
-  // remove task handling
-  const removeTask = async (task) => {
-    try {
-      await taskService.remove(task.id)
-      let tasks = await taskService.getAll()
-      const sorted = [...tasks].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
-
-      // Filters pastDueTasks based on the updated list of tasks
-      const updatedPastDueTasks = pastDueTasks.filter((pastDueTask) => pastDueTask.id !== task.id)
-      setTasks(sorted)
-      setPastDueTasks(updatedPastDueTasks)
-      setNotification('Task completed!')
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
-    } catch (error) {
-      setNotification(`${error.response.data.error}`)
-      setTimeout(() => {
-        setNotification(null)
-      }, 5000)
-    }
   }
 
   // if not signed in, return the login/new user forms
@@ -158,11 +93,9 @@ function App() {
         <Tasks
           tasks={tasks}
           setTasks={setTasks}
-          addTask={addTask}
-          updateTask={updateTask}
-          removeTask={removeTask}
           pastDueTasks={pastDueTasks}
           setPastDueTasks={setPastDueTasks}
+          setNotification={setNotification}
         />
       </div>
     </div>
