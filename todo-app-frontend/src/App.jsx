@@ -15,7 +15,7 @@ function App() {
   const [tasks, setTasks] = useState([])
   const [notification, setNotification] = useState(null)
 
-  // checks user token every minute for expiration
+  // checks user token every 3 seconds for expiration
   useEffect(() => {
     // decodes token expiration time
     const isTokenExpired = token => {
@@ -29,7 +29,7 @@ function App() {
         handleLogout()
         setNotification('Session expired, please log in again.')
       }
-    }, 1 * 60 * 1000)
+    }, 1 * 3 * 1000)
 
     return () => clearInterval(interval)
   }, [user])
@@ -37,7 +37,7 @@ function App() {
   // sets users json web token
   useEffect(() => {
     // sets local storage to remember user
-    const loggedUserJSON = window.localStorage.getItem('loggedTaskappUser')
+    const loggedUserJSON = window.localStorage.getItem('loggedTaskAppUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)

@@ -63,7 +63,7 @@ const Tasks = ({
     const showWhenVisible = { display: taskFormVisible ? '' : 'none' }
 
     return (
-        <Container className="m-2 p-2 w-50">
+        <Container className="m-2 p-2 col-md-6">
             <h1>Tasks</h1>
             <div className="m-3 p-3 text-center">
                 {pastDueDisplay()}

@@ -100,7 +100,7 @@ const Task = ({
     const showWhenVisible = { display: taskFormVisible ? '' : 'none' }
 
     return (
-        <Container className={`py-3 mb-3 border ${task.deadline !== null && new Date(task.deadline) < Date.now() ? 'border-danger border-3' : 'border-secondary border-2'} bg-light rounded d-flex align-items-center justify-content-between`}>
+        <Container className={`task py-3 mb-3 border ${task.deadline !== null && new Date(task.deadline) < Date.now() ? 'border-danger border-3' : 'border-secondary border-2'} bg-light rounded d-flex align-items-center justify-content-between`}>
             <div style={hideWhenVisible}>
                 <h3>{task.content}</h3>
                 {task.deadline === null
@@ -116,10 +116,10 @@ const Task = ({
             </div>
             <div className="d-flex flex-column">
                 <div style={hideWhenVisible}>
-                    <div className="m-2 py-1">
+                    <div className="m-1 py-1">
                         <Icon className="edit" title="Edit task" path={mdiSquareEditOutline} size={2} onClick={() => setTaskFormVisible(true)}></Icon>
                     </div>
-                    <div className="m-2 py-1">
+                    <div className="m-1 py-1">
                         <Icon className="finish" title="Finish task" path={mdiCheckboxMarkedOutline} size={2} onClick={() => removeTask(task)}></Icon>
                     </div>
                 </div>

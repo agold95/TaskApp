@@ -1,6 +1,6 @@
 :root {
     --green-primary: #198754;
-    --green-secondary: #126b42;
+    --green-secondary: #147548;
     --blue-primary: #0d6efd;
     --blue-secondary: #0a50b9;
     --red-primary: #dc3545;
@@ -12,6 +12,12 @@
 body {
     font-family: "Rubik", sans-serif;
     background-color: var(--bg-primary);
+}
+
+h3 {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
 }
 
 svg {
@@ -79,5 +85,11 @@ svg {
   100% {
       -moz-box-shadow: 0 0 0 0 #dc354600;
       box-shadow: 0 0 0 0 #dc354600;
+  }
+}
+
+@media (max-width: 350px) {
+  .task {
+    flex-direction: column;
   }
 }

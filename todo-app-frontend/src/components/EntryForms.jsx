@@ -30,7 +30,7 @@ const EntryForms = ({
             username, password
         })
         window.localStorage.setItem(
-            'loggedTaskappUser', JSON.stringify(user)
+            'loggedTaskAppUser', JSON.stringify(user)
         ) 
         taskService.setToken(user.token)
         setUser(user)
