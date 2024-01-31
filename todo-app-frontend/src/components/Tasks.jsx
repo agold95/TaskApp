@@ -28,7 +28,11 @@ const Tasks = ({
     // useEffect hook for rending tasks
     useEffect(() => {
         setTasks(tasks)
+
+        const updatedPastDueTasks = tasks.filter(task => task.deadline !== null && new Date(task.deadline) < Date.now())
+        setPastDueTasks(updatedPastDueTasks)
     }, [tasks, setTasks])
+
 
     // add task handling
     const addTask = async (newTask) => {

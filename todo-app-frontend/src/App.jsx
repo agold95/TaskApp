@@ -15,61 +15,74 @@ function App() {
   const [tasks, setTasks] = useState([])
   const [notification, setNotification] = useState(null)
 
-  // checks user token every 3 seconds for expiration
-  useEffect(() => {
-    // decodes token expiration time
-    const isTokenExpired = token => {
-      const decodedToken = jwtDecode(token)
-      //console.log('Token expires in:', decodedToken.exp * 1000 - Date.now(), 'seconds')
-      return decodedToken.exp * 1000 < Date.now()
-    }
-    // logs user out if token is expired
-    const interval = setInterval(() => {
-      if (user && isTokenExpired(user.token)) {
-        handleLogout()
-        setNotification('Session expired, please log in again.')
-      }
-    }, 1 * 3 * 1000)
-
-    return () => clearInterval(interval)
-  }, [user])
-
-  // sets users json web token
-  useEffect(() => {
-    // sets local storage to remember user
-    const loggedUserJSON = window.localStorage.getItem('loggedTaskAppUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      taskService.setToken(user.token)
-    }
-  }, [])
-
-  // initializes users tasks
-  useEffect(() => {
-    const getTasks = async () => {
-      if (user) {
-        try {
-          const userTasks = await taskService.getAll()
-          const sortedTasks = [...userTasks].sort(
-            (a, b) => new Date(a.createdAt) - new Date(b.createdAt))
-          setTasks(sortedTasks)
-        } catch (error) {
-          setNotification(`${error.response.data.error}`)
-          setTimeout(() => {
-            setNotification(null)
-          }, 1 * 5 * 1000)
-        }
-      }
-    }
-    getTasks()
-  }, [user])
+  // decodes token expiration time
+  const isTokenExpired = token => {
+    const decodedToken = jwtDecode(token)
+    //console.log('Token expires in:', decodedToken.exp * 1000 - Date.now(), 'seconds')
+    return decodedToken.exp * 1000 < Date.now()
+  }
 
   // logout handling
   const handleLogout = () => {
     window.localStorage.clear()
     setUser(null)
   }
+
+  // checks user token every 3 seconds for expiration
+  useEffect(() => {
+    const tokenCheckInterval = setInterval(() => {
+      // logs user out if token is expired
+      if (user && isTokenExpired(user.token)) {
+        handleLogout()
+        setNotification("Session expired, please log in again.")
+      }
+    }, 3000)
+
+    return () => clearInterval(tokenCheckInterval)
+  }, [user])
+
+  // sets users web token from local storage
+  useEffect(() => {
+    const setTokenFromLocalStorage = () => {
+      const loggedUserJSON = window.localStorage.getItem("loggedTaskAppUser")
+      if (loggedUserJSON) {
+        try {
+          const storedUser = JSON.parse(loggedUserJSON)
+          setUser(storedUser)
+          taskService.setToken(storedUser.token)
+        } catch (error) {
+          setNotification(`${error.response.data.error}`)
+          setTimeout(() => {
+            setNotification(null)
+          }, 5000)
+        }
+      }
+    }
+
+    setTokenFromLocalStorage()
+  }, [])
+
+  // initializes users tasks
+  useEffect(() => {
+    const getTasks = async () => {
+      try {
+        const userTasks = await taskService.getAll()
+        const sortedTasks = [...userTasks].sort(
+          (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+        )
+        setTasks(sortedTasks)
+      } catch (error) {
+        setNotification(`${error.response.data.error}`)
+        setTimeout(() => {
+          setNotification(null)
+        }, 5000)
+      }
+    }
+
+    if (user) {
+      getTasks()
+    }
+  }, [user])
 
   // if not signed in, return the login/new user forms
   if (user === null) {
