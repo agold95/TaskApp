@@ -20,7 +20,7 @@ import { mdiMinusCircle } from "@mdi/js"
 const Tasks = ({
     tasks,
     setTasks,
-    setNotification
+    notify
 }) => {
     const [taskFormVisible, setTaskFormVisible] = useState(false)
     const [pastDueTasks, setPastDueTasks] = useState([])
@@ -37,17 +37,11 @@ const Tasks = ({
     // add task handling
     const addTask = async (newTask) => {
         try {
-        const createdTask = await taskService.create(newTask)
-        setTasks(tasks.concat(createdTask))
-        setNotification('Task added!')
-            setTimeout(() => {
-                setNotification(null)
-            }, 1 * 5 * 1000)
+            const createdTask = await taskService.create(newTask)
+            setTasks(tasks.concat(createdTask))
+            notify('Task added!')
         } catch (error) {
-        setNotification(`${error.response.data.error}`)
-        setTimeout(() => {
-            setNotification(null)
-        }, 1 * 5 * 1000)
+            notify(`${error.response.data.error}`, 'error')
         }
     }
 
@@ -70,6 +64,9 @@ const Tasks = ({
         <Container className="m-2 p-2 col-md-6">
             <h1>Tasks</h1>
             <div className="m-3 p-3 text-center">
+                {tasks.length <= 0 && (
+                    <h3 className="p-2 alert alert-primary">You have no tasks, click the button to create one!</h3>
+                )}
                 {pastDueDisplay()}
             </div>
             <Container className="d-flex flex-column align-items-end">
@@ -97,7 +94,7 @@ const Tasks = ({
                         pastDueTasks={pastDueTasks}
                         setPastDueTasks={setPastDueTasks}
                         setTasks={setTasks}
-                        setNotification={setNotification}
+                        notify={notify}
                         />
                     )}
                 </Container>
@@ -109,7 +106,7 @@ const Tasks = ({
 Tasks.propTypes = {
     tasks: PropTypes.array.isRequired,
     setTasks: PropTypes.func.isRequired,
-    setNotification: PropTypes.func.isRequired,
+    notify: PropTypes.func.isRequired
 }
 
 export default Tasks

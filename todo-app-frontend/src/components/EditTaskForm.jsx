@@ -47,6 +47,8 @@ const EditTaskForm = ({
                 value={updatedTaskInfo.content}
                 placeholder='Enter task'
                 required
+                minLength='3'
+                maxLength='100'
                 onChange={handleChange}
             />
             </Form.Group>

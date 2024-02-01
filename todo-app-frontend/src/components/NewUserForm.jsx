@@ -22,6 +22,8 @@ const NewUserForm = ({
             id='new-user-username'
             value={username}
             required
+            minLength='3'
+            maxLength='25'
             placeholder='Enter username'
             onChange={handleUsernameChange}
           />

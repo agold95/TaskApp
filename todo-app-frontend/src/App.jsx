@@ -13,7 +13,15 @@ import EntryForms from "./components/EntryForms"
 function App() {
   const [user, setUser] = useState(null)
   const [tasks, setTasks] = useState([])
-  const [notification, setNotification] = useState(null)
+  const [info, setInfo] = useState({ message: null })
+
+  // notification handling
+  const notify = (message, type = 'info') => {
+    setInfo({ message, type })
+    setTimeout(() => {
+      setInfo({ message: null })
+    }, 5000)
+  }
 
   // decodes token expiration time
   const isTokenExpired = token => {
@@ -34,7 +42,7 @@ function App() {
       // logs user out if token is expired
       if (user && isTokenExpired(user.token)) {
         handleLogout()
-        setNotification("Session expired, please log in again.")
+        notify("Session expired, please log in again.", 'error')
       }
     }, 3000)
 
@@ -51,10 +59,7 @@ function App() {
           setUser(storedUser)
           taskService.setToken(storedUser.token)
         } catch (error) {
-          setNotification(`${error.response.data.error}`)
-          setTimeout(() => {
-            setNotification(null)
-          }, 5000)
+          notify(`${error.response.data.error}`, 'error')
         }
       }
     }
@@ -72,10 +77,7 @@ function App() {
         )
         setTasks(sortedTasks)
       } catch (error) {
-        setNotification(`${error.response.data.error}`)
-        setTimeout(() => {
-          setNotification(null)
-        }, 5000)
+        notify(`${error.response.data.error}`, 'error')
       }
     }
 
@@ -88,10 +90,10 @@ function App() {
   if (user === null) {
     return (
       <div>
-        <Notification notification={notification} />
+        <Notification info={info} />
         <EntryForms 
           setUser={setUser}
-          setNotification={setNotification}
+          notify={notify}
         />
     </div>
     )
@@ -100,12 +102,12 @@ function App() {
   return (
     <div>
       <NavbarComponent user={user} handleLogout={handleLogout} />
-      <Notification notification={notification} />
+      <Notification info={info} />
       <div className="d-flex justify-content-center">
         <Tasks
           tasks={tasks}
           setTasks={setTasks}
-          setNotification={setNotification}
+          notify={notify}
         />
       </div>
     </div>

@@ -8,7 +8,7 @@ const NavbarComponent = ({
   handleLogout 
 }) => {
     return (
-      <Navbar className="bg-secondary">
+      <Navbar className="navbar border-bottom border-dark">
         <Container></Container>
         <Container className="justify-content-center align-items-center align-self-center">
           <Navbar.Brand className="m-0 p-0">TaskApp</Navbar.Brand>

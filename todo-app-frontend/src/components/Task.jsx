@@ -21,7 +21,7 @@ const Task = ({
     pastDueTasks,
     setPastDueTasks,
     setTasks,
-    setNotification
+    notify
 }) => {
     const [taskFormVisible, setTaskFormVisible] = useState(false)
 
@@ -57,16 +57,10 @@ const Task = ({
                 return new Date(a.createdAt) - new Date(b.createdAt)
             })
         setTasks(sorted)
-        setNotification('Task updated!')
-            setTimeout(() => {
-            setNotification(null)
-            }, 1 * 5 * 1000)
+        notify('Task updated!')
         } catch (error) {
         console.log(error)
-        setNotification(`${error.response.data.error}`)
-        setTimeout(() => {
-            setNotification(null)
-        }, 1 * 5 * 1000)
+        notify(`${error.response.data.error}`, 'error')
         }
     }
 
@@ -81,15 +75,9 @@ const Task = ({
         const updatedPastDueTasks = pastDueTasks.filter((pastDueTask) => pastDueTask.id !== task.id)
         setTasks(sorted)
         setPastDueTasks(updatedPastDueTasks)
-        setNotification('Task completed!')
-        setTimeout(() => {
-            setNotification(null)
-        }, 1 * 5 * 1000)
+        notify('Task completed!')
         } catch (error) {
-        setNotification(`${error.response.data.error}`)
-        setTimeout(() => {
-            setNotification(null)
-        }, 1 * 5 * 1000)
+        notify(`${error.response.data.error}`, 'error')
         }
     }
 
@@ -98,9 +86,9 @@ const Task = ({
     const showWhenVisible = { display: taskFormVisible ? '' : 'none' }
 
     return (
-        <Container className={`task py-3 mb-3 border ${task.deadline !== null && new Date(task.deadline) < Date.now() ? 'border-danger border-3' : 'border-secondary border-2'} bg-light rounded d-flex align-items-center justify-content-between`}>
+        <Container className={`task py-3 mb-3 border ${task.deadline !== null && new Date(task.deadline) < Date.now() ? 'border-danger border-3' : 'border-dark border-2'} bg-light rounded d-flex align-items-center justify-content-between`}>
             <div style={hideWhenVisible}>
-                <h3>{task.content}</h3>
+                <h3 className="task-content text-break">{task.content}</h3>
                 {task.deadline === null
                     ? <p>Due on: none specified</p>
                     : <p>Due on: {new Date(task.deadline).toLocaleDateString()} by {new Date(task.deadline).toLocaleTimeString()}</p>}
@@ -131,7 +119,7 @@ Task.propTypes = {
     pastDueTasks: PropTypes.array.isRequired,
     setPastDueTasks: PropTypes.func.isRequired,
     setTasks: PropTypes.func.isRequired,
-    setNotification: PropTypes.func.isRequired
+    notify: PropTypes.func.isRequired
 }
 
 export default Task

@@ -36,6 +36,8 @@ const TaskForm = ({
             value={content}
             placeholder='Enter task'
             required
+            minLength='3'
+            maxLength='100'
             onChange={({ target }) => setContent(target.value)}
           />
         </Form.Group>

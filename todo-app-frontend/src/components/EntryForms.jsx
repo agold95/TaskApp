@@ -14,8 +14,8 @@ import NewUserForm from "./NewUserForm"
 import { Button } from "react-bootstrap"
 
 const EntryForms = ({
-    setNotification,
-    setUser
+    setUser,
+    notify
 }) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -36,18 +36,12 @@ const EntryForms = ({
         setUser(user)
         setUsername('')
         setPassword('')
-        setNotification(`${user.username} successfully logged in!`)
-        setTimeout(() => {
-            setNotification(null)
-        }, 1 * 5 * 1000)
+        notify(`${user.username} successfully logged in!`)
         } catch (error) {
         console.log(error)
-        setNotification(`${error.response.data.error}`)
+        notify(`${error.response.data.error}`, 'error')
         setUsername('')
         setPassword('')
-        setTimeout(() => {
-            setNotification(null)
-        }, 1 * 5 * 1000)
         }
     }
 
@@ -55,27 +49,21 @@ const EntryForms = ({
     const handleNewUser = async (event) => {
         event.preventDefault()
         try {
-        const newUser = await usersService.newUser({
-            username, password, passwordConfirmation
-        })
-        taskService.setToken(newUser.token)
-        setUsername('')
-        setPassword('')
-        setPasswordConfirmation('')
-        setLoginVisible(false)
-        setNotification(`New user ${newUser.username} created!`)
-        setTimeout(() => {
-            setNotification(null)
-        }, 1 * 5 * 1000)
+          const newUser = await usersService.newUser({
+              username, password, passwordConfirmation
+          })
+          taskService.setToken(newUser.token)
+          setUsername('')
+          setPassword('')
+          setPasswordConfirmation('')
+          setLoginVisible(false)
+          notify(`New user ${newUser.username} created!`)
         } catch (error) {
-        console.log(error)
-        setUsername('')
-        setPassword('')
-        setPasswordConfirmation('')
-        setNotification(`${error.response.data.error}`)
-        setTimeout(() => {
-            setNotification(null)
-        }, 1 * 5 * 1000)
+          console.log(error)
+          setUsername('')
+          setPassword('')
+          setPasswordConfirmation('')
+          notify(`${error.response.data.error}`, 'error')
         }
     }
 
@@ -136,8 +124,8 @@ const EntryForms = ({
 }
 
 EntryForms.propTypes = {
-    setNotification: PropTypes.func.isRequired,
-    setUser: PropTypes.func.isRequired
+  setUser: PropTypes.func.isRequired,
+  notify: PropTypes.func.isRequired
 }
 
 export default EntryForms

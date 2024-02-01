@@ -11,12 +11,16 @@
 
 body {
     font-family: "Rubik", sans-serif;
-    background-color: var(--bg-primary);
+    background-image: radial-gradient(circle, #9e9e9e, #999a9f, #9298a0, #87969f, #7c949d);}
+
+.navbar {
+    background-image: linear-gradient(to top, #585e64, #646b70, #71787d, #7e8589, #8c9396);
 }
 
-h3 {
+.task-content {
     overflow-wrap: break-word;
     word-wrap: break-word;
+    word-break: break-word;
     hyphens: auto;
 }
 
