@@ -16,3 +16,13 @@ TaskApp is an easy-to-use web app that allows users to add, edit, remove, track,
 - Built using the MERN stack with MongoDB, Express, React, and Node.js.
 - Follows RESTful api implementation with full user authentication. 
 - Complete front-end using React hooks, and styled using Bootstrap and CSS.
+
+## Screenshots
+
+![New User](https://i.imgur.com/vjx5zAU.png)
+
+![New Tasks](https://i.imgur.com/DehqRnE.png)
+
+![Past Due Tasks](https://i.imgur.com/ftLuvhT.png)
+
+![Edit Tasks](https://i.imgur.com/A9SUpSg.png)
