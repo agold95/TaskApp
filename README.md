@@ -14,7 +14,8 @@ TaskApp is an easy-to-use web app that allows users to add, edit, remove, track,
 #### Technology
 
 - Built using the MERN stack with MongoDB, Express, React, and Node.js.
-- Follows RESTful api implementation with full user authentication. 
+- Follows RESTful api implementation between the front and back-end.
+- Back-end created with express connecting to MongoDB database.
 - Complete front-end using React hooks, and styled using Bootstrap and CSS.
 
 ## Screenshots
