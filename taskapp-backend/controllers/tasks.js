@@ -102,7 +102,17 @@ tasksRouter.put('/:id', async (request, response) => {
 
 // delete task
 tasksRouter.delete('/:id', async (request, response) => {
-  await Task.findByIdAndRemove(request.params.id)
+  const taskId = request.params.id
+  const userId = request.user.id
+
+  const task = await Task.findById(taskId)
+
+  // compares task users id string to request users id string
+  if (task.user.toString() !== userId) {
+    return response.status(403).json({ error: 'Unauthorized: You are not allowed to delete this task' })
+  }
+
+  await Task.findByIdAndRemove(taskId)
   response.status(204).end()
 })
 

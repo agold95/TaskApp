@@ -454,7 +454,26 @@ describe('A signed-in user:', () => {
 
         describe('Delete a task:', () => {
             test('If it does not belong to the user', async () => {
-                
+                // creates new user
+                const passwordHash = await bcrypt.hash('123abc', 10)
+                const user = new User({ username: 'Testuser4', passwordHash })
+                await user.save()
+
+                // logs new user in
+                const loggedInUser = await api
+                    .post('/api/login')
+                    .send({ username: 'Testuser4', password: '123abc' })
+                    .expect(200)
+
+                authToken = loggedInUser.body.token
+
+                const tasksAtStart = await helper.tasksinDB()
+                const taskToDelete = tasksAtStart[0]
+
+                await api
+                    .delete(`/api/tasks/${taskToDelete.id}`)
+                    .set({ 'Authorization': `Bearer ${authToken}`, Accept: 'application/json' })
+                    .expect(403)
             })
         })
     })
