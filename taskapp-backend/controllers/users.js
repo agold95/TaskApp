@@ -7,7 +7,7 @@ usersRouter.post('/', async (request, response) => {
   const { username, password, passwordConfirmation } = request.body
 
   // checks for username/password length
-  if (password.length <= 3 || username.length <= 3) {
+  if (password.length < 3 || username.length < 3) {
       return response.status(400).json({ error: 'Username or password must be longer than 3 characters' }).end()
   }
 
