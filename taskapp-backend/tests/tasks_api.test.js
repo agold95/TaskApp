@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
 
 const api = supertest(app)
 const User = require('../models/user')
@@ -38,10 +39,13 @@ describe('A new user:', () => {
     })
 
     test('Can sign in after creating account', async () => {
-        await api
+        const user = await api
             .post('/api/login')
             .send({ username: 'Testuser1', password: '12345' })
             .expect(200)
+        
+        // checks that user has a json web token
+        expect(user.body.token).toBeDefined()
     })
 
     describe('Cannot be created:', () => {
@@ -200,8 +204,20 @@ describe('A signed-in user:', () => {
             .expect(201)
     })
 
+    test('Is issued a valid json web token', async () => {
+        // checks that user has a json web token
+        expect(authToken).toBeDefined()
+
+        // decodes token
+        const decodedToken = jwt.decode(authToken)
+
+        expect(decodedToken).toBeDefined()
+        // checks expiration time
+        expect(decodedToken.exp).toBeGreaterThan(Math.floor(Date.now() / 1000))
+    })
+
     describe('Can:', () => {
-        test('Get all their tasks', async () => {
+        test('Get all their tasks, returned as json', async () => {
             const response = await api
                 .get('/api/tasks')
                 .set({ 'Authorization': `Bearer ${authToken}`, Accept: 'application/json' })
@@ -271,7 +287,7 @@ describe('A signed-in user:', () => {
             expect(updatedTask.body).not.toBe(taskToUpdate)
         })
 
-        test('Delete a task', async () => {
+        test('Delete a task from their array of tasks', async () => {
             const tasksAtStart = await helper.tasksinDB()
             const taskToDelete = tasksAtStart[0]
 
