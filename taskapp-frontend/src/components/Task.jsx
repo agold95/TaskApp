@@ -28,16 +28,16 @@ const Task = ({
     // evaluates deadline and current time to determine if task is past due or not, then renders it
     useEffect(() => {
         if (task.deadline !== null) {
-            const isTaskPastDue = new Date(task.deadline) < Date.now();
-            const isTaskAlreadyAdded = pastDueTasks.some(pastDueTask => pastDueTask.id === task.id);
+            const isTaskPastDue = new Date(task.deadline) < Date.now()
+            const isTaskAlreadyAdded = pastDueTasks.some(pastDueTask => pastDueTask.id === task.id)
 
             if (isTaskPastDue && !isTaskAlreadyAdded) {
-                setPastDueTasks(prevPastDueTasks => [...prevPastDueTasks, task]);
+                setPastDueTasks(prevPastDueTasks => [...prevPastDueTasks, task])
             } else if (!isTaskPastDue && isTaskAlreadyAdded) {
-                setPastDueTasks(prevPastDueTasks => prevPastDueTasks.filter(pastDueTask => pastDueTask.id !== task.id));
+                setPastDueTasks(prevPastDueTasks => prevPastDueTasks.filter(pastDueTask => pastDueTask.id !== task.id))
             }
         }
-    }, [task, pastDueTasks, setPastDueTasks]);
+    }, [task, pastDueTasks, setPastDueTasks])
 
 
     const pastDueTasksHandler = () => {
