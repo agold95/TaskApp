@@ -10,10 +10,14 @@ import NavbarComponent from "./components/Navbar"
 import Notification from "./components/Notification"
 import EntryForms from "./components/EntryForms"
 
+// bootstrap components
+import { Spinner } from "react-bootstrap"
+
 function App() {
   const [user, setUser] = useState(null)
   const [tasks, setTasks] = useState([])
   const [info, setInfo] = useState({ message: null })
+  const [loading, setLoading] = useState(false)
 
   // notification handling
   const notify = (message, type = 'info') => {
@@ -32,8 +36,8 @@ function App() {
 
   // logout handling
   const handleLogout = () => {
-    window.localStorage.clear()
-    setUser(null)
+      window.localStorage.clear()
+      setUser(null)
   }
 
   // checks user token every 3 seconds for expiration
@@ -70,6 +74,7 @@ function App() {
   // initializes users tasks
   useEffect(() => {
     const getTasks = async () => {
+      setLoading(true)
       try {
         const userTasks = await taskService.getAll()
         const sortedTasks = [...userTasks].sort(
@@ -78,6 +83,8 @@ function App() {
         setTasks(sortedTasks)
       } catch (error) {
         notify(`${error.response.data.error}`, 'error')
+      } finally {
+        setLoading(false)
       }
     }
 
@@ -104,11 +111,18 @@ function App() {
       <NavbarComponent user={user} handleLogout={handleLogout} />
       <Notification info={info} />
       <div className="d-flex justify-content-center">
-        <Tasks
-          tasks={tasks}
-          setTasks={setTasks}
-          notify={notify}
-        />
+        {loading ? (
+          <div className="d-flex flex-column align-items-center p-5 m-5">
+            <h4>getting your tasks...</h4>
+            <Spinner as="span" animation="border" role="status" aria-hidden="true" variant='primary' style={{ width: '5rem', height: '5rem'}} />
+          </div>
+        ) : (
+          <Tasks
+            tasks={tasks}
+            setTasks={setTasks}
+            notify={notify}
+          />  
+        )}
       </div>
     </div>
   )
