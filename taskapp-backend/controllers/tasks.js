@@ -41,12 +41,12 @@ tasksRouter.post('/', async (request, response) => {
 
   // returns if content is greater than 3 characters long
   if (task.content.length < 3) {
-      return response.status(400).json({ error: 'Task content must be greater than 3 characters' }).end()
+    return response.status(400).json({ error: 'Task content must be greater than 3 characters' }).end()
   }
 
   // returns if task content is longer than 100 characters long
   if (task.content.length > 100) {
-      return response.status(400).json({ error: 'Task content must be less than 100 characters' }).end()
+    return response.status(400).json({ error: 'Task content must be less than 100 characters' }).end()
   }
 
   task.user = user._id
@@ -78,7 +78,7 @@ tasksRouter.put('/:id', async (request, response) => {
 
   // returns if task content is greater than 3 characters long
   if (task.content.length < 3) {
-      return response.status(400).json({ error: 'Task content must be greater than 3 characters' }).end()
+    return response.status(400).json({ error: 'Task content must be greater than 3 characters' }).end()
   }
 
   // returns if deadline is malformatted
@@ -88,12 +88,12 @@ tasksRouter.put('/:id', async (request, response) => {
 
   // returns if content is greater than 3 characters long
   if (task.content.length < 3) {
-      return response.status(400).json({ error: 'Task content must be greater than 3 characters' }).end()
+    return response.status(400).json({ error: 'Task content must be greater than 3 characters' }).end()
   }
 
   // returns if task content is longer than 100 characters long
   if (task.content.length > 100) {
-      return response.status(400).json({ error: 'Task content must be less than 100 characters' }).end()
+    return response.status(400).json({ error: 'Task content must be less than 100 characters' }).end()
   }
 
   const updatedTask = await Task.findByIdAndUpdate(id, task, { new: true })

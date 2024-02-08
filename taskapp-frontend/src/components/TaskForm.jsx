@@ -1,21 +1,23 @@
-import { useState } from "react"
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
-//bootstrap components
-import { Button, Container, Form, Spinner } from "react-bootstrap"
+// bootstrap components
+import {
+  Button, Container, Form, Spinner,
+} from 'react-bootstrap'
 
-const TaskForm = ({
+function TaskForm({
   createTask,
-  setTaskFormVisible
-}) => {
+  setTaskFormVisible,
+}) {
   const [content, setContent] = useState('')
   const [deadline, setDeadline] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const addTask = event => {
+  const addTask = (event) => {
     event.preventDefault()
     setLoading(true)
-      try {
+    try {
       createTask({ content, deadline })
       setContent('')
       setDeadline('')
@@ -43,15 +45,18 @@ const TaskForm = ({
             id="content"
             type="text"
             value={content}
-            placeholder='Enter task'
+            placeholder="Enter task"
             required
-            minLength='3'
-            maxLength='100'
+            minLength="3"
+            maxLength="100"
             onChange={({ target }) => setContent(target.value)}
           />
         </Form.Group>
         <Form.Group>
-          <Form.Text>Deadline <small><i>(optional)</i></small></Form.Text>
+          <Form.Text>
+            Deadline
+            <small><i>(optional)</i></small>
+          </Form.Text>
           <Form.Control
             disabled={loading}
             id="deadline"
@@ -60,14 +65,14 @@ const TaskForm = ({
             onChange={({ target }) => setDeadline(target.value)}
           />
         </Form.Group>
-        <div className='pt-3 d-flex justify-content-evenly'>
+        <div className="pt-3 d-flex justify-content-evenly">
           {loading ? (
-              <Spinner as="span" animation="border" role="status" aria-hidden="true" variant='primary' size="sm" />
-            ) : (
-              <>
-                <Button className="mx-4" variant="secondary" type="reset" onClick={reset}>Reset</Button>
-                <Button variant="success" type="submit">Add Task</Button>
-              </>
+            <Spinner as="span" animation="border" role="status" aria-hidden="true" variant="primary" size="sm" />
+          ) : (
+            <>
+              <Button className="mx-4" variant="secondary" type="reset" onClick={reset}>Reset</Button>
+              <Button variant="success" type="submit">Add Task</Button>
+            </>
           )}
         </div>
       </Form>
@@ -77,7 +82,7 @@ const TaskForm = ({
 
 TaskForm.propTypes = {
   createTask: PropTypes.func.isRequired,
-  setTaskFormVisible: PropTypes.func.isRequired
+  setTaskFormVisible: PropTypes.func.isRequired,
 }
 
 export default TaskForm

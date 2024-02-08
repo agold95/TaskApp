@@ -1,17 +1,17 @@
-import { useState, useEffect } from "react"
-import { jwtDecode } from "jwt-decode"
+import React, { useState, useEffect } from 'react'
+import { jwtDecode } from 'jwt-decode'
+
+// bootstrap components
+import { Spinner } from 'react-bootstrap'
 
 // services
 import taskService from './services/tasks'
 
 // components
-import Tasks from "./components/Tasks"
-import NavbarComponent from "./components/Navbar"
-import Notification from "./components/Notification"
-import EntryForms from "./components/EntryForms"
-
-// bootstrap components
-import { Spinner } from "react-bootstrap"
+import Tasks from './components/Tasks'
+import NavbarComponent from './components/Navbar'
+import Notification from './components/Notification'
+import EntryForms from './components/EntryForms'
 
 function App() {
   const [user, setUser] = useState(null)
@@ -28,16 +28,16 @@ function App() {
   }
 
   // decodes token expiration time
-  const isTokenExpired = token => {
+  const isTokenExpired = (token) => {
     const decodedToken = jwtDecode(token)
-    //console.log('Token expires in:', decodedToken.exp * 1000 - Date.now(), 'seconds')
+    // console.log('Token expires in:', decodedToken.exp * 1000 - Date.now(), 'seconds')
     return decodedToken.exp * 1000 < Date.now()
   }
 
   // logout handling
   const handleLogout = () => {
-      window.localStorage.clear()
-      setUser(null)
+    window.localStorage.clear()
+    setUser(null)
   }
 
   // checks user token every 3 seconds for expiration
@@ -46,7 +46,7 @@ function App() {
       // logs user out if token is expired
       if (user && isTokenExpired(user.token)) {
         handleLogout()
-        notify("Session expired, please log in again.", 'error')
+        notify('Session expired, please log in again.', 'error')
       }
     }, 3000)
 
@@ -56,7 +56,7 @@ function App() {
   // sets users web token from local storage
   useEffect(() => {
     const setTokenFromLocalStorage = () => {
-      const loggedUserJSON = window.localStorage.getItem("loggedTaskAppUser")
+      const loggedUserJSON = window.localStorage.getItem('loggedTaskAppUser')
       if (loggedUserJSON) {
         try {
           const storedUser = JSON.parse(loggedUserJSON)
@@ -78,7 +78,7 @@ function App() {
       try {
         const userTasks = await taskService.getAll()
         const sortedTasks = [...userTasks].sort(
-          (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+          (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
         )
         setTasks(sortedTasks)
       } catch (error) {
@@ -98,11 +98,11 @@ function App() {
     return (
       <div>
         <Notification info={info} />
-        <EntryForms 
+        <EntryForms
           setUser={setUser}
           notify={notify}
         />
-    </div>
+      </div>
     )
   }
 
@@ -114,14 +114,14 @@ function App() {
         {loading ? (
           <div className="d-flex flex-column align-items-center p-5 m-5">
             <h4>getting your tasks...</h4>
-            <Spinner as="span" animation="border" role="status" aria-hidden="true" variant='primary' style={{ width: '5rem', height: '5rem'}} />
+            <Spinner as="span" animation="border" role="status" aria-hidden="true" variant="primary" style={{ width: '5rem', height: '5rem' }} />
           </div>
         ) : (
           <Tasks
             tasks={tasks}
             setTasks={setTasks}
             notify={notify}
-          />  
+          />
         )}
       </div>
     </div>

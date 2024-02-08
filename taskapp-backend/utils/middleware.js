@@ -26,7 +26,7 @@ const errorHandler = (error, request, response, next) => {
   } else if (error.name === 'TokenExpiredError') {
     return response.status(401).json({ error: 'token expired, logout then login to continue using.' })
   } else if (error.name === 'AxiosError') {
-    return response.status(401).json({ error: 'token verification failed '})
+    return response.status(401).json({ error: 'token verification failed ' })
   }
   next(error)
 }
