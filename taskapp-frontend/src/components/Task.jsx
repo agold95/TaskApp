@@ -8,7 +8,7 @@ import taskService from '../services/tasks'
 import EditTaskForm from "./EditTaskForm"
 
 // bootstrap components
-import { Container } from "react-bootstrap"
+import { Container, Spinner } from "react-bootstrap"
 
 // MDI components
 import Icon from "@mdi/react"
@@ -24,6 +24,7 @@ const Task = ({
     notify
 }) => {
     const [taskFormVisible, setTaskFormVisible] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     // evaluates deadline and current time to determine if task is past due or not, then renders it
     useEffect(() => {
@@ -49,35 +50,38 @@ const Task = ({
     // update task handling
     const updateTask = async (id, task) => {
         try {
-        const taskToUpdate = { ...task, content: task.content, deadline: task.deadline }
-        await taskService.update(id, taskToUpdate)
-        
-        let tasks = await taskService.getAll()
-        const sorted = [...tasks].sort((a, b) => {
+            const taskToUpdate = { ...task, content: task.content, deadline: task.deadline }
+            await taskService.update(id, taskToUpdate)
+            
+            let tasks = await taskService.getAll()
+            const sorted = [...tasks].sort((a, b) => {
                 return new Date(a.createdAt) - new Date(b.createdAt)
             })
-        setTasks(sorted)
-        notify('Task updated!')
-        } catch (error) {
-        console.log(error)
-        notify(`${error.response.data.error}`, 'error')
-        }
+            setTasks(sorted)
+            notify('Task updated!')
+            } catch (error) {
+                console.log(error)
+                notify(`${error.response.data.error}`, 'error')
+            }
     }
 
     // remove task handling
     const removeTask = async (task) => {
-        try {
-        await taskService.remove(task.id)
-        let tasks = await taskService.getAll()
-        const sorted = [...tasks].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+        setLoading(true)
+            try {
+                await taskService.remove(task.id)
+                let tasks = await taskService.getAll()
+                const sorted = [...tasks].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
 
-        // Filters pastDueTasks based on the updated list of tasks
-        const updatedPastDueTasks = pastDueTasks.filter((pastDueTask) => pastDueTask.id !== task.id)
-        setTasks(sorted)
-        setPastDueTasks(updatedPastDueTasks)
-        notify('Task completed!')
-        } catch (error) {
-        notify(`${error.response.data.error}`, 'error')
+                // Filters pastDueTasks based on the updated list of tasks
+                const updatedPastDueTasks = pastDueTasks.filter((pastDueTask) => pastDueTask.id !== task.id)
+                setTasks(sorted)
+                setPastDueTasks(updatedPastDueTasks)
+                notify('Task completed!')
+            } catch (error) {
+                notify(`${error.response.data.error}`, 'error')
+            } finally {
+                setLoading(false)
         }
     }
 
@@ -87,29 +91,39 @@ const Task = ({
 
     return (
         <Container className={`task py-3 mb-3 border ${task.deadline !== null && new Date(task.deadline) < Date.now() ? 'border-danger border-3' : 'border-dark border-2'} bg-light rounded d-flex align-items-center justify-content-between`}>
-            <div style={hideWhenVisible}>
-                <h3 className="task-content text-break">{task.content}</h3>
-                {task.deadline === null
-                    ? <p>Due on: none specified</p>
-                    : <p>Due on: {new Date(task.deadline).toLocaleDateString()} by {new Date(task.deadline).toLocaleTimeString()}</p>}
-                <small><i>Added on: {new Date(task.createdAt).toLocaleDateString()} at {new Date(task.createdAt).toLocaleTimeString()}</i></small>
-            </div>
-            <div style={showWhenVisible} className="flex-grow-1">
-                <EditTaskForm task={task} updateTask={updateTask} setTaskFormVisible={setTaskFormVisible} />
-            </div>
-            <div style={hideWhenVisible}>
-                {pastDueTasksHandler()}
-            </div>
-            <div className="d-flex flex-column">
-                <div style={hideWhenVisible}>
-                    <div className="m-1 py-1">
-                        <Icon className="edit" title="Edit task" path={mdiSquareEditOutline} size={2} onClick={() => setTaskFormVisible(true)}></Icon>
+            {loading ? (
+                <>
+                    <p>removing task...</p>
+                    <Spinner as="span" animation="border" role="status" aria-hidden="true" variant='danger' style={{ width: '3rem', height: '3rem'}} />
+                </>
+            ) : (
+                <>
+                   <div style={hideWhenVisible}>
+                        <h3 className="task-content text-break">{task.content}</h3>
+                        {task.deadline === null
+                            ? <p>Due on: none specified</p>
+                            : <p>Due on: {new Date(task.deadline).toLocaleDateString()} by {new Date(task.deadline).toLocaleTimeString()}</p>}
+                        <small><i>Added on: {new Date(task.createdAt).toLocaleDateString()} at {new Date(task.createdAt).toLocaleTimeString()}</i></small>
                     </div>
-                    <div className="m-1 py-1">
-                        <Icon className="finish" title="Finish task" path={mdiCheckboxMarkedOutline} size={2} onClick={() => removeTask(task)}></Icon>
+                    <div style={showWhenVisible} className="flex-grow-1">
+                        <EditTaskForm task={task} updateTask={updateTask} setTaskFormVisible={setTaskFormVisible} />
                     </div>
-                </div>
-            </div>
+                    <div style={hideWhenVisible}>
+                        {pastDueTasksHandler()}
+                    </div>
+                    <div className="d-flex flex-column">
+                        <div style={hideWhenVisible}>
+                            <div className="m-1 py-1">
+                                <Icon className="edit" title="Edit task" path={mdiSquareEditOutline} size={2} onClick={() => setTaskFormVisible(true)}></Icon>
+                            </div>
+                            <div className="m-1 py-1">
+                                <Icon className="finish" title="Finish task" path={mdiCheckboxMarkedOutline} size={2} onClick={() => removeTask(task)}></Icon>
+                            </div>
+                        </div>
+                    </div>      
+                </>
+            )}
+           
         </Container>
     )
 }

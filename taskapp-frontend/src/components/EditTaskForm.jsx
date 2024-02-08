@@ -2,7 +2,7 @@ import { useState } from "react"
 import PropTypes from 'prop-types'
 
 // bootstrap components
-import { Container, Form, Button } from "react-bootstrap"
+import { Container, Form, Button, Spinner } from "react-bootstrap"
 
 const EditTaskForm = ({
     updateTask,
@@ -13,6 +13,7 @@ const EditTaskForm = ({
         content: task.content,
         deadline: task.deadline
     })
+    const [loading, setLoading] = useState(false)
     
     const handleChange = e => {
         setUpdatedTaskInfo({ ...updatedTaskInfo, [e.target.name]: e.target.value })
@@ -30,8 +31,15 @@ const EditTaskForm = ({
     
     const editTask = event => {
         event.preventDefault()
-        updateTask(task.id, { ...updatedTaskInfo })
-        setTaskFormVisible(false)
+        setLoading(true)
+        try {
+            updateTask(task.id, { ...updatedTaskInfo })
+            setTaskFormVisible(false)
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setLoading(false)
+        }
     }
 
     return (
@@ -41,6 +49,7 @@ const EditTaskForm = ({
                 <Form.Group>
                 <Form.Text>Task</Form.Text>
                 <Form.Control
+                    disabled={loading}    
                     id="content"
                     type="text"
                     name="content"
@@ -55,6 +64,7 @@ const EditTaskForm = ({
                 <Form.Group>
                 <Form.Text>Deadline <small><i>(optional)</i></small></Form.Text>
                 <Form.Control
+                    disabled={loading}    
                     id="deadline"
                     type="datetime-local"
                     name="deadline"
@@ -63,8 +73,14 @@ const EditTaskForm = ({
                 />
                 </Form.Group>
                 <div className='pt-3 d-flex justify-content-evenly align-items-center'>
-                    <Button className="m-1" variant="secondary" onClick={() => setTaskFormVisible(false)}>Cancel</Button>
-                    <Button variant="success" type="submit">Save</Button>
+                    {loading ? (
+                        <Spinner as="span" animation="border" role="status" aria-hidden="true" variant='primary' size="sm" />
+                        ) : (
+                        <>
+                            <Button className="m-1" variant="secondary" onClick={() => setTaskFormVisible(false)}>Cancel</Button>
+                            <Button variant="success" type="submit">Save</Button>
+                        </>
+                    )}
                 </div>
             </Form>
         </Container>

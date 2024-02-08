@@ -2,7 +2,7 @@ import { useState } from "react"
 import PropTypes from 'prop-types'
 
 //bootstrap components
-import { Button, Container, Form } from "react-bootstrap"
+import { Button, Container, Form, Spinner } from "react-bootstrap"
 
 const TaskForm = ({
   createTask,
@@ -10,13 +10,21 @@ const TaskForm = ({
 }) => {
   const [content, setContent] = useState('')
   const [deadline, setDeadline] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const addTask = event => {
     event.preventDefault()
-    createTask({ content, deadline })
-    setContent('')
-    setDeadline('')
-    setTaskFormVisible(false)
+    setLoading(true)
+      try {
+      createTask({ content, deadline })
+      setContent('')
+      setDeadline('')
+      setTaskFormVisible(false)
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const reset = () => {
@@ -31,6 +39,7 @@ const TaskForm = ({
         <Form.Group>
           <Form.Text>Task</Form.Text>
           <Form.Control
+            disabled={loading}
             id="content"
             type="text"
             value={content}
@@ -44,6 +53,7 @@ const TaskForm = ({
         <Form.Group>
           <Form.Text>Deadline <small><i>(optional)</i></small></Form.Text>
           <Form.Control
+            disabled={loading}
             id="deadline"
             type="datetime-local"
             value={deadline}
@@ -51,8 +61,14 @@ const TaskForm = ({
           />
         </Form.Group>
         <div className='pt-3 d-flex justify-content-evenly'>
-          <Button className="mx-4" variant="secondary" type="reset" onClick={() => reset()}>Reset</Button>
-          <Button variant="success" type="submit">Add Task</Button>
+          {loading ? (
+              <Spinner as="span" animation="border" role="status" aria-hidden="true" variant='primary' size="sm" />
+            ) : (
+              <>
+                <Button className="mx-4" variant="secondary" type="reset" onClick={reset}>Reset</Button>
+                <Button variant="success" type="submit">Add Task</Button>
+              </>
+          )}
         </div>
       </Form>
     </Container>

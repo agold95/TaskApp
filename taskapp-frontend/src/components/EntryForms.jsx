@@ -11,7 +11,7 @@ import LoginForm from "./LoginForm"
 import NewUserForm from "./NewUserForm"
 
 // bootstrap components
-import { Button } from "react-bootstrap"
+import { Button, Spinner } from "react-bootstrap"
 
 const EntryForms = ({
     setUser,
@@ -21,11 +21,13 @@ const EntryForms = ({
     const [password, setPassword] = useState('')
     const [passwordConfirmation, setPasswordConfirmation] = useState('')
     const [loginVisible, setLoginVisible] = useState(false)
+    const [loading, setLoading] = useState(false)
 
     // login handling
     const handleLogin = async (event) => {
-        event.preventDefault()
-        try {
+      event.preventDefault()
+      setLoading(true)
+      try {
         const user = await loginService.login({
             username, password
         })
@@ -42,29 +44,34 @@ const EntryForms = ({
         notify(`${error.response.data.error}`, 'error')
         setUsername('')
         setPassword('')
-        }
+        } finally {
+          setLoading(false)
+      }
     }
 
     // new user handling
     const handleNewUser = async (event) => {
-        event.preventDefault()
-        try {
-          const newUser = await usersService.newUser({
-              username, password, passwordConfirmation
-          })
-          taskService.setToken(newUser.token)
-          setUsername('')
-          setPassword('')
-          setPasswordConfirmation('')
-          setLoginVisible(false)
-          notify(`New user ${newUser.username} created!`)
-        } catch (error) {
-          console.log(error)
-          setUsername('')
-          setPassword('')
-          setPasswordConfirmation('')
-          notify(`${error.response.data.error}`, 'error')
-        }
+      event.preventDefault()
+      setLoading(true)
+      try {
+        const newUser = await usersService.newUser({
+            username, password, passwordConfirmation
+        })
+        taskService.setToken(newUser.token)
+        setUsername('')
+        setPassword('')
+        setPasswordConfirmation('')
+        setLoginVisible(false)
+        notify(`New user ${newUser.username} created!`)
+      } catch (error) {
+        console.log(error)
+        setUsername('')
+        setPassword('')
+        setPasswordConfirmation('')
+        notify(`${error.response.data.error}`, 'error')
+      } finally {
+        setLoading(false)
+      }
     }
 
     // clears fields on form switch
@@ -91,34 +98,41 @@ const EntryForms = ({
         <div>
           <p>Log in or create a new account to start using!</p>
         </div>
-        <div className="p-5">
-          <div style={hideWhenVisible}>
-            <LoginForm
-              username={username}
-              password={password}
-              handleUsernameChange={({ target }) => setUsername(target.value)}
-              handlePasswordChange={({ target }) => setPassword(target.value)}
-              handleSubmit={handleLogin}
-            />
-            <div className="p-5">
-              <Button variant="success" size="sm" onClick={() => formSwitch()}>Create a new account</Button>
-            </div>
+        {/* adds a spinner for loading */}
+        {loading ? (
+          <div className='p-5 m-5'>
+            <Spinner as="span" animation="border" role="status" aria-hidden="true" variant='primary' style={{ width: '3rem', height: '3rem'}} />
           </div>
-          <div style={showWhenVisible}>
-            <NewUserForm
-              username={username}
-              password={password}
-              passwordConfirmation={passwordConfirmation}
-              handleUsernameChange={({ target }) => setUsername(target.value)}
-              handlePasswordChange={({ target }) => setPassword(target.value)}
-              handlePasswordConfirmationChange={({ target }) => setPasswordConfirmation(target.value)}
-              handleSubmit={handleNewUser}
-            />
-            <div className="p-5">
-              <Button variant="info" size="sm" onClick={() => formSwitch()}>Log in to an existing account</Button>
+        ) : (
+          <div className="p-5">
+            <div style={hideWhenVisible}>
+              <LoginForm
+                username={username}
+                password={password}
+                handleUsernameChange={({ target }) => setUsername(target.value)}
+                handlePasswordChange={({ target }) => setPassword(target.value)}
+                handleSubmit={handleLogin}
+              />
+              <div className="p-5">
+                <Button variant="success" size="sm" onClick={() => formSwitch()}>Create a new account</Button>
+              </div>
             </div>
-          </div>
+            <div style={showWhenVisible}>
+              <NewUserForm
+                username={username}
+                password={password}
+                passwordConfirmation={passwordConfirmation}
+                handleUsernameChange={({ target }) => setUsername(target.value)}
+                handlePasswordChange={({ target }) => setPassword(target.value)}
+                handlePasswordConfirmationChange={({ target }) => setPasswordConfirmation(target.value)}
+                handleSubmit={handleNewUser}
+              />
+              <div className="p-5">
+                <Button variant="info" size="sm" onClick={() => formSwitch()}>Log in to an existing account</Button>
+              </div>
+            </div>
         </div>
+        )}
       </div>
     )
 }
