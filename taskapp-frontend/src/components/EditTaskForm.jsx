@@ -37,7 +37,7 @@ function EditTaskForm({
     event.preventDefault()
     setLoading(true)
     try {
-      updateTask(task.id, { ...updatedTaskInfo })
+      updateTask(task.id, updatedTaskInfo)
       setTaskFormVisible(false)
     } catch (error) {
       console.log(error)
@@ -68,6 +68,7 @@ function EditTaskForm({
         <Form.Group>
           <Form.Text>
             Deadline
+            {' '}
             <small><i>(optional)</i></small>
           </Form.Text>
           <Form.Control

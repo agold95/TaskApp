@@ -55,6 +55,7 @@ function TaskForm({
         <Form.Group>
           <Form.Text>
             Deadline
+            {' '}
             <small><i>(optional)</i></small>
           </Form.Text>
           <Form.Control

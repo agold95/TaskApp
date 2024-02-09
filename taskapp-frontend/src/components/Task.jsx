@@ -45,10 +45,9 @@ function Task({
     : null)
 
   // update task handling
-  const updateTask = async (id) => {
+  const updateTask = async (id, updatedTaskInfo) => {
     try {
-      const taskToUpdate = { ...task, content: task.content, deadline: task.deadline }
-      await taskService.update(id, taskToUpdate)
+      await taskService.update(id, updatedTaskInfo)
 
       const tasks = await taskService.getAll()
       const sorted = [...tasks].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
@@ -100,18 +99,22 @@ function Task({
               : (
                 <p>
                   Due on:
+                  {' '}
                   {new Date(task.deadline).toLocaleDateString()}
                   {' '}
                   by
+                  {' '}
                   {new Date(task.deadline).toLocaleTimeString()}
                 </p>
               )}
             <small>
               <i>
                 Added on:
+                {' '}
                 {new Date(task.createdAt).toLocaleDateString()}
                 {' '}
                 at
+                {' '}
                 {new Date(task.createdAt).toLocaleTimeString()}
               </i>
             </small>
