@@ -18,7 +18,15 @@ function TaskForm({
     event.preventDefault()
     setLoading(true)
     try {
-      createTask({ content, deadline })
+    // converts the deadline to UTC before adding the task
+      let utcDeadline = deadline
+      if (deadline) {
+      // parses the deadline as a Date object in the user's local timezone
+        const localDeadline = new Date(deadline)
+        // converts the local deadline to UTC and formats it as an ISO string
+        utcDeadline = localDeadline.toISOString()
+      }
+      createTask({ content, deadline: utcDeadline })
       setContent('')
       setDeadline('')
       setTaskFormVisible(false)

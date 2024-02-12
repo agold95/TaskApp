@@ -37,7 +37,15 @@ function EditTaskForm({
     event.preventDefault()
     setLoading(true)
     try {
-      updateTask(task.id, updatedTaskInfo)
+    // converts the deadline to UTC before updating the task
+      let utcDeadline = updatedTaskInfo.deadline
+      if (updatedTaskInfo.deadline) {
+      // parses the deadline as a Date object in the user's local timezone
+        const localDeadline = new Date(updatedTaskInfo.deadline)
+        // converts the local deadline to UTC and formats it as an ISO string
+        utcDeadline = localDeadline.toISOString()
+      }
+      updateTask(task.id, { ...updatedTaskInfo, deadline: utcDeadline })
       setTaskFormVisible(false)
     } catch (error) {
       console.log(error)
